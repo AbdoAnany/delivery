@@ -31,65 +31,62 @@ class _LanguageSelectorState extends State<LanguageSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width:MediaQuery.of(context).size.width,
-      child: AlertDialog(
-        title:  Text('Choose Language',
+    return AlertDialog(
+      title:  Text('Choose Language',
 
-          style: TextStyle(
-            fontSize: 12,
-            color: AppColors.primaryDark,
-            fontWeight: FontWeight.bold,
-          ),
+        style: TextStyle(
+          fontSize: 12,
+          color: AppColors.primaryDark,
+          fontWeight: FontWeight.bold,
         ),
-        backgroundColor: AppColors.fillColor2,
-        content: SizedBox(
-          height: 44,
-          width:MediaQuery.of(context).size.width,
-
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children:  [
-              Expanded(
-                child: _buildLanguageOption(
-                  languageCode: 'ar',
-                  image: AppImages.arabic,
-                  displayName: 'العربية',
-                  englishName: 'Arabic',
-                ),
-              ),
-              const SizedBox(width: 10),
-
-              Expanded(
-                child: _buildLanguageOption(
-                  languageCode: 'en',
-                  image: AppImages.english,
-
-                  displayName: 'English',
-                  englishName: 'English',
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-
-          SizedBox(
-            width: double.infinity,
-
-            child: CustomButton(
-              onPressed: () {
-                widget.onLanguageSelected(_selectedLanguage);
-                Navigator.pop(context);
-              },
-              radius: 12,
-              text: 'Apply',
-
-            ),
-          ),
-        ],
       ),
+      backgroundColor: AppColors.fillColor2,
+      content: SizedBox(
+        height: 44,
+        width:MediaQuery.of(context).size.width,
+
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:  [
+            Expanded(
+              child: _buildLanguageOption(
+                languageCode: 'ar',
+                image: AppImages.arabic,
+                displayName: 'العربية',
+                englishName: 'Arabic',
+              ),
+            ),
+            const SizedBox(width: 10),
+
+            Expanded(
+              child: _buildLanguageOption(
+                languageCode: 'en',
+                image: AppImages.english,
+
+                displayName: 'English',
+                englishName: 'English',
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+
+        SizedBox(
+          width: double.infinity,
+
+          child: CustomButton(
+            onPressed: () {
+              widget.onLanguageSelected(_selectedLanguage);
+              Navigator.pop(context);
+            },
+            radius: 12,
+            text: 'Apply',
+
+          ),
+        ),
+      ],
     );
   }
 

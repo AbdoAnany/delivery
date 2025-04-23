@@ -217,6 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
             onPressed: () {
               showDialog(
                 context: context,
+                barrierColor: AppColors.black.withOpacity(0.40),
                 builder: (context) => LanguageSelector(
                   currentLanguage: 'en', // Get current language from your state
                   onLanguageSelected: (languageCode) {
