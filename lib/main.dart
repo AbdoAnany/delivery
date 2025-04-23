@@ -1,31 +1,21 @@
+// main.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'core/AppColor.dart';
+import 'features/login/data/datasources/local/AuthLocalDataSource.dart';
+import 'features/login/data/datasources/remote/AuthRemoteDataSource.dart';
+import 'features/login/data/repository/AuthRepository.dart';
+import 'features/login/data/sission.dart';
+import 'features/login/presentation/HomeScreen.dart';
 import 'features/login/presentation/login_screen.dart';
+import 'features/login/presentation/manger/SessionManager.dart';
+import 'features/login/presentation/manger/auth_cubit.dart';
 import 'features/splash/splash.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize shared preferences
-  final sharedPrefs = await SharedPreferences.getInstance();
-
-  runApp(
-    MultiProvider(
-      providers: [
-        Provider(create: (_) => ApiService()),
-        Provider(create: (_) => DatabaseHelper()),
-        ChangeNotifierProvider(
-          create: (_) => AuthProvider(
-            apiService: ApiService(),
-            sharedPreferences: sharedPrefs,
-          ),
-        ),
-      ],
-      child: const MyApp(),
-    ),
-  );
+void main() {
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -33,18 +23,80 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Delivery App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(create: (context) => AuthRemoteDataSource()),
+        RepositoryProvider(create: (context) => AuthLocalDataSource()),
+        RepositoryProvider(create: (context) => SessionManager()),
+        RepositoryProvider(
+          create: (context) => AuthRepository(
+            remoteDataSource: context.read(),
+            localDataSource: context.read(),
+          ),
+        ),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthCubit(
+              authRepository: context.read(),
+              sessionManager: context.read(),
+            ),
+          ),
+        ],
+        child: Builder(
+          builder: (context) {
+            return ActivityAwareApp(
+              sessionManager: context.read<SessionManager>(),
+              child: MaterialApp(
+                title: 'Onyx Delivery',
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: AppColors.primary,
+                    primary: AppColors.primary,
+                  ),
+                  useMaterial3: true,
+                  fontFamily: 'Montserrat',
+                ),
+                initialRoute: '/splash',
+                routes: {
+                  '/splash': (context) =>  SplashScreen(),
+                  '/login': (context) => const LoginScreen(),
+                  '/home': (context) => const HomeScreen(),
+                },
+              ),
+            );
+          },
+        ),
       ),
-      initialRoute: '/splash',
-      routes: {
-        '/splash': (context) => const SplashScreen(),
-        '/login': (context) => const LoginScreen(),
-        '/language': (context) => const LanguageSelectionScreen(),
-        '/home': (context) => const HomeScreen(),
+    );
+  }
+}
+
+class ActivityAwareApp extends StatefulWidget {
+  final Widget child;
+  final SessionManager sessionManager;
+
+  const ActivityAwareApp({
+    super.key,
+    required this.child,
+    required this.sessionManager,
+  });
+
+  @override
+  State<ActivityAwareApp> createState() => _ActivityAwareAppState();
+}
+
+class _ActivityAwareAppState extends State<ActivityAwareApp> {
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      behavior: HitTestBehavior.translucent,
+      onPointerDown: (_) {
+        widget.sessionManager.userActivity();
       },
+      child: widget.child,
     );
   }
 }
