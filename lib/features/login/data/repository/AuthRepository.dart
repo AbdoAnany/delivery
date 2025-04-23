@@ -25,16 +25,18 @@ class AuthRepository {
         password: password,
         languageNo: languageNo,
       );
+      
+      print('Login response: $response');
 
       // Check for successful login based on response
-      if (response['Result'] == true) {
+      if (response['Result']['ErrNo'] == 0) {
         // Extract user data from response
-        final userData = response['Data'][0];
+        final userData = response['Data'];
         final user = User(
           deliveryNo: deliveryNo,
           languageNo: languageNo,
-          name: userData['DLVRY_NM'] ?? 'Delivery User',
-          token: userData['TOKEN'] ?? '',
+          name: userData['DeliveryName'] ?? 'Delivery User',
+
         );
 
         // Save user to local storage

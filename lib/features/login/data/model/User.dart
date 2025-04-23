@@ -5,13 +5,11 @@ class User extends Equatable {
   final String deliveryNo;
   final String languageNo;
   final String name;
-  final String token;
 
   const User({
     required this.deliveryNo,
     required this.languageNo,
     required this.name,
-    required this.token,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -19,7 +17,6 @@ class User extends Equatable {
       deliveryNo: json['deliveryNo'] ?? '',
       languageNo: json['languageNo'] ?? '',
       name: json['name'] ?? '',
-      token: json['token'] ?? '',
     );
   }
 
@@ -28,10 +25,9 @@ class User extends Equatable {
       'deliveryNo': deliveryNo,
       'languageNo': languageNo,
       'name': name,
-      'token': token,
     };
   }
 
   @override
-  List<Object?> get props => [deliveryNo, languageNo, name, token];
+  List<Object?> get props => [deliveryNo, languageNo, name,];
 }
