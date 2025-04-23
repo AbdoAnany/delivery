@@ -1,6 +1,9 @@
 
 
+import 'package:delivery/features/login/presentation/widget/CustomTextField.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/AppColor.dart';
 
 
 class LanguageSelector extends StatefulWidget {
@@ -28,42 +31,71 @@ class _LanguageSelectorState extends State<LanguageSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Choose Language'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildLanguageOption(
-            languageCode: 'ar',
-            displayName: 'العربية',
-            englishName: 'Arabic',
+    return SizedBox(
+      width:MediaQuery.of(context).size.width,
+      child: AlertDialog(
+        title:  Text('Choose Language',
+
+          style: TextStyle(
+            fontSize: 12,
+            color: AppColors.primaryDark,
+            fontWeight: FontWeight.bold,
           ),
-          const SizedBox(height: 16),
-          _buildLanguageOption(
-            languageCode: 'en',
-            displayName: 'English',
-            englishName: 'English',
+        ),
+        backgroundColor: AppColors.fillColor2,
+        content: SizedBox(
+          height: 44,
+          width:MediaQuery.of(context).size.width,
+
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:  [
+              Expanded(
+                child: _buildLanguageOption(
+                  languageCode: 'ar',
+                  image: AppImages.arabic,
+                  displayName: 'العربية',
+                  englishName: 'Arabic',
+                ),
+              ),
+              const SizedBox(width: 10),
+
+              Expanded(
+                child: _buildLanguageOption(
+                  languageCode: 'en',
+                  image: AppImages.english,
+
+                  displayName: 'English',
+                  englishName: 'English',
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+
+          SizedBox(
+            width: double.infinity,
+
+            child: CustomButton(
+              onPressed: () {
+                widget.onLanguageSelected(_selectedLanguage);
+                Navigator.pop(context);
+              },
+              radius: 12,
+              text: 'Apply',
+
+            ),
           ),
         ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            widget.onLanguageSelected(_selectedLanguage);
-            Navigator.pop(context);
-          },
-          child: const Text('Apply'),
-        ),
-      ],
     );
   }
 
   Widget _buildLanguageOption({
     required String languageCode,
+    required String image,
     required String displayName,
     required String englishName,
   }) {
@@ -74,40 +106,50 @@ class _LanguageSelectorState extends State<LanguageSelector> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
         decoration: BoxDecoration(
           color: _selectedLanguage == languageCode
-              ? Colors.blue.withOpacity(0.1)
+              ? Color(0xFFCBFFCBF)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: _selectedLanguage == languageCode
-                ? Colors.blue
+                ? Color(0xFFC39A238)
                 : Colors.grey.shade300,
           ),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              displayName,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: _selectedLanguage == languageCode
-                    ? FontWeight.bold
-                    : FontWeight.normal,
-              ),
+            Image.asset(
+              image,
+              width: 20,
+              height: 20,
             ),
-            const SizedBox(width: 8),
-            Text(
-              englishName,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade600,
-              ),
+            const SizedBox(width: 20),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  displayName,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: _selectedLanguage == languageCode
+                        ? FontWeight.w600
+                        : FontWeight.normal,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  englishName,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+
+              ],
             ),
-            const Spacer(),
-            if (_selectedLanguage == languageCode)
-              const Icon(Icons.check, color: Colors.blue),
           ],
         ),
       ),
