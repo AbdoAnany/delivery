@@ -1,9 +1,12 @@
 // login_screen.dart
 import 'package:delivery/features/login/presentation/widget/CustomTextField.dart';
+import 'package:delivery/features/login/presentation/widget/LanguageSelector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/AppColor.dart';
+import 'manger/AuthProvider.dart';
 import 'manger/auth_cubit.dart';
 import 'manger/auth_state.dart';
 
@@ -206,11 +209,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 bottomLeft: Radius.circular(1000)),
 
           ),
-          child: const Icon(
-            Icons.language,
-            color: Colors.white,
-            size: 28,
-          ),
+          child: IconButton(
+            icon: const Icon(Icons.language,
+                color: Colors.white,
+                size: 27
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => LanguageSelector(
+                  currentLanguage: 'en', // Get current language from your state
+                  onLanguageSelected: (languageCode) {
+                    // Handle language change
+                    Provider.of<AuthProvider>(context, listen: false)
+                        .changeLanguage(languageCode);
+                  },
+                ),
+              );
+            },
+          )
         ),
       ],
     );

@@ -46,7 +46,11 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthFailure(e.toString()));
     }
   }
-
+  Future<void> changeLanguage(String languageNo) async {
+    // _languageNo = languageNo;
+    // await sharedPreferences.setString('languageNo', languageNo);
+    // notifyListeners();
+  }
   void logout() {
     _authRepository.logout();
     _sessionManager.resetSessionTimer();

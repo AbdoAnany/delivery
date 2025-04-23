@@ -25,8 +25,8 @@ class ApiConstants {
 
 class AppImages {
   static const String logo = 'assets/images/logo.png';
-  static const String splash = 'assets/images/splash.png';
+  static const String tawen = 'assets/images/tawen.png';
   static const String background = 'assets/images/background.png';
   static const String deliveryIcon = 'assets/images/delivery.png';
-  static const String profileIcon = 'assets/images/profile_icon.png';
+  static const String delivaryBuke = 'assets/images/delivary_buke.png';
 }
