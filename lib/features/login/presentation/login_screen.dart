@@ -1,0 +1,215 @@
+// login_screen.dart
+import 'package:delivery/features/login/presentation/widget/CustomTextField.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../core/AppColor.dart';
+import 'manger/auth_cubit.dart';
+import 'manger/auth_state.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _deliveryNoController = TextEditingController(text: '1010');
+  final _passwordController = TextEditingController(text: '1');
+  bool _passwordVisible = false;
+
+  @override
+  void dispose() {
+    _deliveryNoController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    context.read<AuthCubit>().login(
+      deliveryNo: _deliveryNoController.text,
+      password: _passwordController.text,
+      languageNo: '2',
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      extendBody: false,
+
+      resizeToAvoidBottomInset: false,
+
+
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+
+        flexibleSpace:   _buildHeader(),
+          toolbarHeight: 74,
+      ),
+      backgroundColor:  AppColors.background,
+      body: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state is AuthFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          } else if (state is AuthSuccess) {
+            Navigator.pushReplacementNamed(context, '/home');
+          }
+        },
+        builder: (context, state) {
+          return SafeArea(
+            child: SingleChildScrollView(
+              child:  Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // App logo and language selector area
+
+
+                    const SizedBox(height: 80),
+
+                    // Welcome message
+                    Text(
+                      'Welcome Back!',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryDark,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    const Text(
+                      'Log back into your account',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: 40),
+
+                    // User ID field
+                    CustomTextField(
+                      controller: _deliveryNoController,
+                      hintText: 'User ID',
+                      validator: (value) => value?.isEmpty ?? true
+                          ? 'User ID is required'
+                          : null,
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Password field
+                    CustomTextField(
+                      controller: _passwordController,
+                      hintText: 'Password',
+                      obscureText: !_passwordVisible,
+                      validator: (value) => value?.isEmpty ?? true
+                          ? 'Password is required'
+                          : null,
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            _passwordVisible ? 'Hide' : 'Show More',
+                            style: TextStyle(
+                              color: AppColors.primaryDark,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    // Login button
+                    CustomButton(
+                      text: 'Log in',
+                      isLoading: state is AuthLoading,
+                      onPressed: _login,
+                    ),
+
+                    const SizedBox(height: 40),
+
+                    // Delivery truck illustration
+                    Center(
+                      child: Image.asset(
+                        AppImages.deliveryIcon,
+                        height: 180,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 26, top: 56),
+              child: Image.asset(
+                AppImages.logo,
+                width: 170,
+              ),
+            ),
+            // const Text(
+            //   'Orders Delivery',
+            //   style: TextStyle(
+            //     color: Colors.grey,
+            //     fontSize: 16,
+            //   ),
+            // ),
+          ],
+        ),
+        Container(
+          width: 127,
+          height: 127,
+
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.only(
+
+                bottomLeft: Radius.circular(100)),
+
+          ),
+          child: Center(
+            child: const Icon(
+              Icons.language,
+              color: Colors.white,
+              size: 24,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
