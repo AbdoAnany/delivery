@@ -41,9 +41,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      extendBody: false,
+      extendBody: true,
 
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
 
 
       appBar: AppBar(
@@ -65,100 +65,110 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         builder: (context, state) {
           return SafeArea(
-            child: SingleChildScrollView(
-              child:  Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // App logo and language selector area
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: SingleChildScrollView(
+                child:  Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // App logo and language selector area
 
 
-                    const SizedBox(height: 80),
+                      const SizedBox(height: 132),
 
-                    // Welcome message
-                    Text(
-                      'Welcome Back!',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryDark,
+                      // Welcome message
+                      Center(
+                        child: Text(
+                          'Welcome Back!',
+                          style: TextStyle(
+                            fontSize: 29,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
 
-                    const SizedBox(height: 12),
+                      const SizedBox(height: 12),
 
-                    const Text(
-                      'Log back into your account',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey,
+                      Center(
+                        child: Text(
+                          'Log back into your account',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.textPrimary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
 
-                    const SizedBox(height: 40),
+                      const SizedBox(height: 40),
 
-                    // User ID field
-                    CustomTextField(
-                      controller: _deliveryNoController,
-                      hintText: 'User ID',
-                      validator: (value) => value?.isEmpty ?? true
-                          ? 'User ID is required'
-                          : null,
-                    ),
+                      // User ID field
+                      CustomTextField(
+                        controller: _deliveryNoController,
+                        hintText: 'User ID',
+                        validator: (value) => value?.isEmpty ?? true
+                            ? 'User ID is required'
+                            : null,
+                      ),
 
-                    const SizedBox(height: 16),
+                      const SizedBox(height: 8),
 
-                    // Password field
-                    CustomTextField(
-                      controller: _passwordController,
-                      hintText: 'Password',
-                      obscureText: !_passwordVisible,
-                      validator: (value) => value?.isEmpty ?? true
-                          ? 'Password is required'
-                          : null,
-                      suffixIcon: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _passwordVisible = !_passwordVisible;
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            _passwordVisible ? 'Hide' : 'Show More',
-                            style: TextStyle(
-                              color: AppColors.primaryDark,
-                              fontWeight: FontWeight.w500,
-                            ),
+                      // Password field
+                      CustomTextField(
+                        controller: _passwordController,
+                        hintText: 'Password',
+                        obscureText: !_passwordVisible,
+                        validator: (value) => value?.isEmpty ?? true
+                            ? 'Password is required'
+                            : null,
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _passwordVisible = !_passwordVisible;
+                            });
+                          },
+
+                        ),
+                      ),
+
+                      const SizedBox(height: 32),
+                   Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Text(
+                          _passwordVisible ? 'Hide' : 'Show More',
+                          style: TextStyle(
+                            color: AppColors.primaryDark,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
-                    ),
-
-                    const SizedBox(height: 32),
-
-                    // Login button
-                    CustomButton(
-                      text: 'Log in',
-                      isLoading: state is AuthLoading,
-                      onPressed: _login,
-                    ),
-
-                    const SizedBox(height: 40),
-
-                    // Delivery truck illustration
-                    Center(
-                      child: Image.asset(
-                        AppImages.deliveryIcon,
-                        height: 180,
+                      // Login button
+                      SizedBox(
+                        width: double.infinity,
+                        child: CustomButton(
+                          text: 'Log in',
+                          isLoading: state is AuthLoading,
+                          onPressed: _login,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              )
+
+                      const SizedBox(height: 40),
+
+                      // Delivery truck illustration
+                      Center(
+                        child: Image.asset(
+                          AppImages.deliveryIcon,
+                          height: 180,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ),
             ),
           );
         },
@@ -198,15 +208,13 @@ class _LoginScreenState extends State<LoginScreen> {
             color: AppColors.primary,
             borderRadius: BorderRadius.only(
 
-                bottomLeft: Radius.circular(100)),
+                bottomLeft: Radius.circular(1000)),
 
           ),
-          child: Center(
-            child: const Icon(
-              Icons.language,
-              color: Colors.white,
-              size: 24,
-            ),
+          child: const Icon(
+            Icons.language,
+            color: Colors.white,
+            size: 28,
           ),
         ),
       ],

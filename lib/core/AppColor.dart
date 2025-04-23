@@ -7,6 +7,8 @@ class AppColors {
   static Color textPrimary = const Color(0xFF004F62);
   static Color textSecondary = const Color(0xFF707070);
   static Color background = const Color(0xFFF9F9F9);
+
+  static Color black=Colors.black;
 }
 
 class ApiConstants {

@@ -25,10 +25,12 @@ class CustomTextField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       validator: validator,
+      textAlign: TextAlign.center,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(color: Colors.grey),
+        hintStyle: TextStyle(color: AppColors.black, fontSize: 14),
         filled: true,
+
         fillColor: Colors.grey[100],
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 20,
@@ -50,7 +52,7 @@ class CustomTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(30),
           borderSide: const BorderSide(color: Colors.red),
         ),
-        suffixIcon: suffixIcon,
+        // suffixIcon: suffixIcon,
       ),
     );
   }
@@ -73,8 +75,9 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
+
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
