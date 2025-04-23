@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 44),
 
                       // User ID field
                       CustomTextField(
@@ -135,20 +135,24 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 27),
                    Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 2.0),
                         child: Text(
                           _passwordVisible ? 'Hide' : 'Show More',
                           style: TextStyle(
                             color: AppColors.primaryDark,
+                            fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
+                      const SizedBox(height: 24),
+
                       // Login button
                       SizedBox(
                         width: double.infinity,
+                        height: 44,
                         child: CustomButton(
                           text: 'Log in',
                           isLoading: state is AuthLoading,
@@ -156,13 +160,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 37),
 
                       // Delivery truck illustration
                       Center(
                         child: Image.asset(
                           AppImages.deliveryIcon,
-                          height: 180,
+                          height: 170,
                         ),
                       ),
                     ],
@@ -181,28 +185,19 @@ class _LoginScreenState extends State<LoginScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 26, top: 56),
-              child: Image.asset(
-                AppImages.logo,
-                width: 170,
-              ),
-            ),
-            // const Text(
-            //   'Orders Delivery',
-            //   style: TextStyle(
-            //     color: Colors.grey,
-            //     fontSize: 16,
-            //   ),
-            // ),
-          ],
+        Padding(
+          padding: const EdgeInsets.only(left: 26, top: 56),
+          child: Image.asset(
+            AppImages.logo,
+            width: 170,
+          ),
         ),
         Container(
-          width: 127,
+          width: 121,
           height: 127,
+          padding: const EdgeInsets.only(left: 78,right: 16,
+              bottom: 49,
+              top: 51),
 
           decoration: BoxDecoration(
             color: AppColors.primary,

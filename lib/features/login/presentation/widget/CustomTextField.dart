@@ -21,38 +21,41 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      validator: validator,
-      textAlign: TextAlign.center,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(color: AppColors.black, fontSize: 14),
-        filled: true,
+    return SizedBox(
+      height: 44,
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        validator: validator,
+        textAlign: TextAlign.center,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(color: AppColors.black, fontSize: 14),
+          filled: true,
 
-        fillColor: Colors.grey[100],
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 18,
+          fillColor: AppColors.fillColor,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 18,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide.none,
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          // suffixIcon: suffixIcon,
         ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide(color: AppColors.primary.withOpacity(0.3)),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(color: Colors.red),
-        ),
-        // suffixIcon: suffixIcon,
       ),
     );
   }
@@ -76,13 +79,14 @@ class CustomButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
 
+
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        // padding: const EdgeInsets.symmetric(vertical: 16),
       ),
       child: isLoading
           ? const SizedBox(
@@ -96,8 +100,8 @@ class CustomButton extends StatelessWidget {
           : Text(
               text,
               style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
               ),
             ),
     );
