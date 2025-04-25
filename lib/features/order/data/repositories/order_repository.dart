@@ -64,7 +64,7 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
     print('Fetching bills');
     final bills = await localDataSource.getBills().catchError((e) => print('Error fetching bills from local: $e'));
     if (bills.isNotEmpty) {
-      print('Using cached bills');
+      print('Using  cached bills ${bills.length}');
       return bills;
     }else {
       if (await _isConnected()) {
@@ -74,7 +74,7 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
             deliveryNo,
             langNo,
             billSrl: billSrl,
-            processedFlag: processedFlag,
+            // processedFlag: processedFlag,
           );
           print('Fetched ${remoteBills.length} bills from remote');
           await localDataSource.insertOrUpdateBills(remoteBills.map((bill) => bill.toJson()).toList());
@@ -162,8 +162,8 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
         final remoteBills = await remoteDataSource.getDeliveryBills(
           deliveryNo,
           langNo,
-          billSrl: billSrl,
-          processedFlag: processedFlag,
+          billSrl: "",
+          processedFlag: "",
         );
         await localDataSource.insertOrUpdateBills(remoteBills.map((bill) => bill.toJson()).toList());
       }

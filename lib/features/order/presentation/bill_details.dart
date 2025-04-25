@@ -1,4 +1,5 @@
 import 'package:delivery/core/constants/colors.dart';
+import 'package:delivery/core/utils/app_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -84,17 +85,15 @@ class _BillDetailScreenState extends State<BillDetailScreenOverview> {
 
   Future<void> _updateBillStatus() async {
     if (_selectedStatusType == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a status')),
-      );
+      AppToast.info(context: context, message: 'Please select a status');
+     
       return;
     }
 
     if (_selectedStatusType == '2' || _selectedStatusType == '3') {
       if (_selectedReason == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select a return reason')),
-        );
+        AppToast.info(context: context, message: 'Please select a return reason');
+
         return;
       }
     }
@@ -114,9 +113,8 @@ class _BillDetailScreenState extends State<BillDetailScreenOverview> {
 
       if (success) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Status updated successfully')),
-          );
+AppToast.success(context: context, message: 'Status updated successfully');
+
           Navigator.of(context).pop(true); // Return true to indicate success
         }
       } else {
@@ -127,9 +125,7 @@ class _BillDetailScreenState extends State<BillDetailScreenOverview> {
         _errorMessage = e.toString();
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.toString()}')),
-        );
+        AppToast.error(context: context, message: e.toString());
       }
     } finally {
       if (mounted) {

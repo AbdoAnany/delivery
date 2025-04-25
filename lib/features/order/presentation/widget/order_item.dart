@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/colors.dart';
@@ -18,7 +19,7 @@ class OrderItem extends StatelessWidget {
     final statusColor = _getStatusColor();
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsetsDirectional.only(bottom: 16),
       elevation: 5,
       child: Container(
         decoration: BoxDecoration(
@@ -40,13 +41,14 @@ class OrderItem extends StatelessWidget {
   Widget _buildOrderInfo(BuildContext context) {
     return Expanded(
       child: Padding(
-        padding: EdgeInsets.only(left: 20.w, top: 8.h),
+        padding: EdgeInsetsDirectional.only(start: 20.w, top: 8.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               '#${order.billNo}',
               style: TextStyle(
+
                 color: AppColors.grey,
                 fontSize: 12.sp,
               ),
@@ -74,7 +76,7 @@ class OrderItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Status',
+            'Status'.tr(),
             style: TextStyle(
               color: AppColors.grey,
               fontSize: 10.sp,
@@ -105,7 +107,7 @@ class OrderItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Total price',
+              'Total Price'.tr(),
               style: TextStyle(
                 color: AppColors.grey,
                 fontSize: 10.sp,
@@ -137,7 +139,7 @@ class OrderItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Date',
+            'Date'.tr(),
             style: TextStyle(
               color: AppColors.grey,
               fontSize: 10.sp,
@@ -174,9 +176,9 @@ class OrderItem extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: statusColor,
-        borderRadius: const BorderRadius.only(
-          topRight: Radius.circular(10),
-          bottomRight: Radius.circular(10),
+        borderRadius: const BorderRadiusDirectional.only(
+          topEnd: Radius.circular(10),
+          bottomEnd: Radius.circular(10),
         ),
       ),
       child: InkWell(
@@ -191,10 +193,15 @@ class OrderItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 36.h),
-              Text(
-                'Order Details',
-                style: TextStyle(color: Colors.white, fontSize: 8.sp),
-                textAlign: TextAlign.center,
+              Padding(
+                padding:  EdgeInsets.symmetric(horizontal: 2.0.w),
+                child: Text(
+                  'Order Details'.tr(),
+                  maxLines: 2,
+                  style: TextStyle(color: Colors.white, fontSize: 8.sp),
+                  textAlign: TextAlign.center,
+
+                ),
               ),
               Icon(
                 Icons.chevron_right,

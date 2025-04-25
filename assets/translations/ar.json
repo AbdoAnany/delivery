@@ -9,8 +9,11 @@
   "Choose Language": "اختر اللغة",
   "No orders available": "لا توجد طلبات متاحة",
 
-
-
+  "Others": "اخرى",
+  "New": "جديد",
+"Status": "حالة",
+  "Total Price": "مبلغ ",
+"Date": "تاريخ",
   "Email": "البريد الإلكتروني",
   "Password": "كلمة المرور",
   "Please enter your email": "الرجاء إدخال بريدك الإلكتروني",

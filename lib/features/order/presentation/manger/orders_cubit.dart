@@ -157,6 +157,7 @@ class OrdersCubit extends Cubit<OrdersState> {
 
     emit(OrdersInitial());
   }
+
 }
 
 class _DefaultTickerProvider implements TickerProvider {

@@ -8,8 +8,11 @@
   "No orders available": "No orders available",
   "Choose Language": "Choose Language",
 
-
-
+"Others": "Others",
+  "New": "New",
+"Status": "Status",
+  "Total Price": "Total Price",
+    "Date": "Date",
   "Email": "Email",
   "Password": "Password",
   "Please enter your email": "Please enter your email",

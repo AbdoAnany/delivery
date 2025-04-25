@@ -1,6 +1,7 @@
 import 'package:delivery/features/order/presentation/widget/empty_state.dart';
 import 'package:delivery/features/order/presentation/widget/loading_indicator.dart';
 import 'package:delivery/features/order/presentation/widget/order_item.dart';
+import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,22 +12,63 @@ import '../../../core/di/dependency_injection.dart';
 import '../../../core/utils/Global.dart';
 import '../../login/presentation/manger/auth_cubit.dart';
 import '../../login/presentation/widget/LanguageSelector.dart';
-import '../data/repositories/order_repository.dart';
 
 import 'bill_details.dart';
 import 'manger/orders_cubit.dart';
 
-class OrdersScreen extends StatelessWidget {
+class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
 
   @override
+  State<OrdersScreen> createState() => _OrdersScreenState();
+}
+
+class _OrdersScreenState extends State<OrdersScreen> {
+  late final OrdersCubit _ordersCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _ordersCubit = getIt<OrdersCubit>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _ordersCubit.getDeliveryBills();
+    });
+  }
+
+  @override
+  void dispose() {
+    _ordersCubit.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (context) =>
-             getIt<OrdersCubit>()..getDeliveryBills(),
+    return BlocProvider.value(
+      value: _ordersCubit,
       child: const OrdersView(),
     );
+  }
+}
+class _OrdersScreenContent extends StatefulWidget {
+  const _OrdersScreenContent();
+
+  @override
+  State<_OrdersScreenContent> createState() => __OrdersScreenContentState();
+}
+
+class __OrdersScreenContentState extends State<_OrdersScreenContent> {
+  @override
+  void initState() {
+    super.initState();
+    // Delay the call to avoid race conditions
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<OrdersCubit>().getDeliveryBills();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const OrdersView();
   }
 }
 
@@ -41,6 +83,7 @@ class OrdersView extends StatelessWidget {
         children: [
           _buildHeader(context),
           _buildTabBar(context),
+          _buildFilter(context),
           _buildOrdersList(context),
         ],
       ),
@@ -185,6 +228,9 @@ alignment: Alignment.centerRight,
                 ),
               ],
             ),
+            onTap: (index) {
+              // context.read<OrdersCubit>().getDeliveryBills();
+            },
             labelColor: Colors.white,
             padding: EdgeInsets.zero,
             indicatorPadding: EdgeInsets.zero,
@@ -192,7 +238,7 @@ alignment: Alignment.centerRight,
             dividerHeight: 0,
             unselectedLabelColor: const Color(0xFF2C3E50),
             labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-            tabs: const [Tab(text: 'New'), Tab(text: 'Others')],
+            tabs:  [Tab(text: 'New'.tr()), Tab(text: 'Others'.tr())],
           );
         },
       ),
@@ -226,7 +272,9 @@ alignment: Alignment.centerRight,
           } else if (state is OrdersLoaded) {
             final orders = state.filteredOrders;
             if (orders.isEmpty) {
-              return const EmptyState();
+              return  RefreshIndicator(
+                  onRefresh: () => context.read<OrdersCubit>().getDeliveryBills(),
+                  child: const EmptyState());
             }
             return RefreshIndicator(
               onRefresh: () => context.read<OrdersCubit>().getDeliveryBills(),
@@ -255,4 +303,37 @@ alignment: Alignment.centerRight,
       ),
     );
   }
+
+ Widget _buildFilter(BuildContext context) {
+    return Container(
+      height: 36.h,
+      width: 220.w,
+      margin: EdgeInsets.only(top: 16.h, bottom: 28.h),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 2)),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.filter_list),
+            onPressed: () {
+              // Handle filter button press
+            },
+          ),
+          const Text('Filter'),
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              // Handle search button press
+            },
+          ),
+        ],
+      ),
+    );
+ }
 }

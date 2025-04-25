@@ -106,10 +106,11 @@ Future<void> _registerCubits() async {
       sessionManager: getIt<SessionManager>(),
     ),
   );
-}Future<void> _ordersCubit() async {
-  getIt.registerSingleton<OrdersCubit>(
-    OrdersCubit(
-   deliveryRepository: getIt<DeliveryRepositoryImpl>(),
-    ),
+}
+
+Future<void> _ordersCubit() async {
+
+  getIt.registerFactory<OrdersCubit>(
+        () => OrdersCubit(deliveryRepository: getIt<DeliveryRepositoryImpl>()),
   );
 }
