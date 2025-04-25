@@ -2,14 +2,12 @@
 import 'dart:convert';
 
 import 'package:delivery/core/AppColor.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 // import 'screens/orders_screen.dart';
 // import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:flutter/foundation.dart';
 // import '../models/order.dart';
 
