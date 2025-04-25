@@ -22,7 +22,7 @@ A Flutter-based mobile application for delivery management, featuring efficient 
 4. UI updates with filtered data
 
 ### Tech Stack
-- **State Management**: Flutter Bloc
+- **State Management**: Flutter Cubit
 - **Dependency Injection**: GetIt
 - **Network Requests**: Dio
 - **Local Database**: SQLite (sqflite)
