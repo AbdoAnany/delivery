@@ -12,6 +12,7 @@ class AppColors {
   static Color babyBlue = const Color(0xFFE9FAFF);
 
   static Color black=Colors.black;
+  static Color white=Colors.white;
 
 }
 

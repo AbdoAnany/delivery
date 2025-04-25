@@ -2,6 +2,7 @@
 
 import 'package:delivery/features/login/presentation/widget/CustomTextField.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/AppColor.dart';
 
@@ -32,18 +33,28 @@ class _LanguageSelectorState extends State<LanguageSelector> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title:  Text('Choose Language',
-
+      // In the AlertDialog
+      title: Text(
+        'Choose Language',
         style: TextStyle(
-          fontSize: 12,
+          fontSize: 12.sp,
           color: AppColors.primaryDark,
           fontWeight: FontWeight.bold,
         ),
       ),
+      titlePadding: EdgeInsets.only(top: 30.h,
+          bottom: 20.h,
+          left: 20.w),
+      contentPadding:  EdgeInsets.symmetric(
+        horizontal: 17.w,
+      ),
+      actionsPadding: EdgeInsets.symmetric(vertical: 20.h,
+          horizontal: 17.w,
+          ),
       backgroundColor: AppColors.fillColor2,
       content: SizedBox(
-        height: 44,
-        width:MediaQuery.of(context).size.width,
+        height: 44.h,
+        width: MediaQuery.of(context).size.width,
 
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -103,11 +114,11 @@ class _LanguageSelectorState extends State<LanguageSelector> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+        padding:  EdgeInsets.symmetric(horizontal: 20.w, vertical: 0),
         decoration: BoxDecoration(
           color: _selectedLanguage == languageCode
               ? Color(0xFFCBFFCBF)
-              : Colors.transparent,
+              : Colors.white,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: _selectedLanguage == languageCode
@@ -116,14 +127,14 @@ class _LanguageSelectorState extends State<LanguageSelector> {
           ),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Image.asset(
               image,
               width: 20,
               height: 20,
             ),
-            const SizedBox(width: 20),
+            // const SizedBox(width: 20),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

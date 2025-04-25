@@ -32,6 +32,7 @@ class AuthRepository {
       if (response['Result']['ErrNo'] == 0) {
         // Extract user data from response
         final userData = response['Data'];
+        print('User data: $userData');
         final user = User(
           deliveryNo: deliveryNo,
           languageNo: languageNo,

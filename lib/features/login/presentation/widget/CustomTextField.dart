@@ -1,5 +1,6 @@
 // custom_text_field.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/AppColor.dart';
 
@@ -22,7 +23,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 44,
+      height: 44.h,
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
@@ -30,31 +31,29 @@ class CustomTextField extends StatelessWidget {
         textAlign: TextAlign.center,
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(color: AppColors.black, fontSize: 14),
+          hintStyle: TextStyle(color: AppColors.black, fontSize: 14.sp),
           filled: true,
-
           fillColor: AppColors.fillColor,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 18,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 18.h,
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(30.r),
             borderSide: BorderSide.none,
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(30.r),
             borderSide: BorderSide.none,
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(30.r),
             borderSide: BorderSide.none,
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(30.r),
             borderSide: const BorderSide(color: Colors.red),
           ),
-          // suffixIcon: suffixIcon,
         ),
       ),
     );
@@ -80,33 +79,30 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
-
-
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radius),
+          borderRadius: BorderRadius.circular(radius.r),
         ),
-        // padding: const EdgeInsets.symmetric(vertical: 16),
       ),
       child: isLoading
-          ? const SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white,
-              ),
-            )
+          ? SizedBox(
+        height: 20.h,
+        width: 20.w,
+        child: CircularProgressIndicator(
+          strokeWidth: 2.w,
+          color: Colors.white,
+        ),
+      )
           : Text(
-              text,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
+        text,
+        style: TextStyle(
+          fontSize: 16.sp,
+          fontWeight: FontWeight.normal,
+        ),
+      ),
     );
   }
 }
