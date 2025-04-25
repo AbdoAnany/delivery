@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'core/AppColor.dart';
 import 'features/login/data/datasources/local/AuthLocalDataSource.dart';
@@ -11,6 +12,7 @@ import 'features/login/presentation/HomeScreen.dart';
 import 'features/login/presentation/login_screen.dart';
 import 'features/login/presentation/manger/SessionManager.dart';
 import 'features/login/presentation/manger/auth_cubit.dart';
+import 'features/order/presentation/order_screen.dart';
 import 'features/splash/splash.dart';
 
 
@@ -68,7 +70,7 @@ class MyApp extends StatelessWidget {
                           primary: AppColors.primary,
                         ),
                         useMaterial3: true,
-                        fontFamily: 'Montserrat',
+                        fontFamily: GoogleFonts.montserrat().fontFamily,
                       ),
                       initialRoute: '/splash',
                       routes: {

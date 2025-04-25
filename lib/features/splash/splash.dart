@@ -47,8 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
           Container(
             height: 245.h,
             width: double.infinity,
-            margin: EdgeInsets.only(bottom: 32.h),
-            padding: EdgeInsets.only(top: 60.h),
+            padding: EdgeInsets.only(top: 60.h,bottom: 32.h),
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(AppImages.tawen),
