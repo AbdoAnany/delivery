@@ -112,7 +112,7 @@ try{
     await batch.commit(noResult: true);
   }
 
-  Map<String, dynamic> _mapBillToDb(Map<String, dynamic> bill) {
+  Map<String, dynamic> _mapBillToDb(Map<String, dynamic> bill,) {
     return {
       'BILL_SRL': bill['BILL_SRL'],
       'BILL_TYPE': bill['BILL_TYPE'] ?? '1', // Default to type 1 if not specified
@@ -129,15 +129,16 @@ try{
       'CSTMR_FLOOR_NO': bill['CSTMR_FLOOR_NO'],
       'CSTMR_APRTMNT_NO': bill['CSTMR_APRTMNT_NO'],
       'CSTMR_ADDRSS': bill['CSTMR_ADDRSS'],
-      'LATITUDE': bill['LATITUDE'] != null && bill['LATITUDE'].toString().isNotEmpty
-          ? double.tryParse(bill['LATITUDE'].toString())
+      'LATITUDE': bill['LATITUDE']?.isNotEmpty == true
+          ? double.tryParse(bill['LATITUDE'])
           : null,
-      'LONGITUDE': bill['LONGITUDE'] != null && bill['LONGITUDE'].toString().isNotEmpty
-          ? double.tryParse(bill['LONGITUDE'].toString())
+      'LONGITUDE': bill['LONGITUDE']?.isNotEmpty == true
+          ? double.tryParse(bill['LONGITUDE'])
           : null,
       'DLVRY_STATUS_FLG': bill['DLVRY_STATUS_FLG'] ?? '0',
     };
   }
+
   Future<List<DeliveryBillModel>> getBills( {String? statusFilter}) async {
     final db = await database;
 

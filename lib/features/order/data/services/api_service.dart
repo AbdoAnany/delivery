@@ -7,48 +7,9 @@ import '../models/delivery_bill.dart';
 import '../models/return_reason.dart';
 import '../models/status_type.dart';
 
-class ApiService {
-  static const String _baseUrl =
-      'http://mdev.yemensoft.net:8087/OnyxDeliveryService/Service.svc';
-
-  Future<List<DeliveryBillModel>> getDeliveryBills(
-      String deliveryNo, {
-        String billSrl = "",
-        String processedFlag = "",
-        String langNo = "1",
-      }) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$_baseUrl/GetDeliveryBillsItems'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'Value': {
-            'P_DLVRY_NO': deliveryNo,
-            'P_LANG_NO': langNo,
-            'P_BILL_SRL': billSrl,
-            'P_PRCSSD_FLG': processedFlag,
-          },
-        }),
-      );
-
-      final data = jsonDecode(response.body);
-      if (data['Result']['ErrNo'] != 0) {
-        throw Exception(data['Result']['ErrMsg'] ?? 'API Error');
-      }
-
-      final List<dynamic> ordersJson = data['Data']['DeliveryBills'] ?? [];
-      return ordersJson.map((json) => DeliveryBillModel.fromJson(json)).toList();
-    } catch (e) {
-      throw Exception('Failed to get delivery bills: $e');
-    }
-  }
-
-// Other API methods...
-}
 
 
 abstract class DeliveryRemoteDataSource {
-  Future<LoginResponse> login(String deliveryNo, String password, String langNo);
   Future<List<DeliveryBillModel>> getDeliveryBills(String deliveryNo, String langNo, {String? billSrl, String? processedFlag});
   Future<List<StatusTypeModel>> getStatusTypes(String langNo);
   Future<List<ReturnReasonModel>> getReturnReasons(String langNo);
@@ -60,19 +21,6 @@ class DeliveryRemoteDataSourceImpl implements DeliveryRemoteDataSource {
 
   DeliveryRemoteDataSourceImpl({required this.apiClient});
 
-  @override
-  Future<LoginResponse> login(String deliveryNo, String password, String langNo) async {
-    final body = {
-      "Value": {
-        "P_LANG_NO": langNo,
-        "P_DLVRY_NO": deliveryNo,
-        "P_PSSWRD": password
-      }
-    };
-
-    final response = await apiClient.post(ApiConstants.loginEndpoint, body);
-    return LoginResponse.fromJson(response['Data']);
-  }
 
   @override
   Future<List<DeliveryBillModel>> getDeliveryBills(String deliveryNo, String langNo, {String? billSrl, String? processedFlag}) async {

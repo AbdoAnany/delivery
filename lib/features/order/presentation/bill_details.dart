@@ -61,8 +61,8 @@ class _BillDetailScreenState extends State<BillDetailScreenOverview> {
       final langNo = LanguageUtil.getCurrentLanguage();
 
 
-      _statusTypes =await  getIt<OrdersCubit>().getStatusTypes(langNo);
-    _returnReasons  = await getIt<OrdersCubit>().getReturnReasons(langNo);
+      _statusTypes =await  getIt<OrdersCubit>().getStatusTypes();
+    _returnReasons  = await getIt<OrdersCubit>().getReturnReasons();
 
       setState(() {
 
@@ -86,7 +86,7 @@ class _BillDetailScreenState extends State<BillDetailScreenOverview> {
   Future<void> _updateBillStatus() async {
     if (_selectedStatusType == null) {
       AppToast.info(context: context, message: 'Please select a status');
-     
+
       return;
     }
 
@@ -105,10 +105,11 @@ class _BillDetailScreenState extends State<BillDetailScreenOverview> {
 
     try {
       final success = await context.read<OrdersCubit>().updateBillStatus(
-        widget.bill.billSrl,
-        _selectedStatusType!,
-        _selectedReason ?? '',
-        LanguageUtil.getCurrentLanguage(),
+
+        // _selectedStatusType!,
+        // _selectedReason ?? '',
+        // LanguageUtil.getCurrentLanguage(),
+        billSrl:  widget.bill.billSrl, statusFlag:  widget.bill.statusFlag,
       );
 
       if (success) {
