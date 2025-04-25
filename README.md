@@ -15,15 +15,15 @@ A Flutter-based mobile application for delivery management, featuring efficient 
 ## App Screenshots
 
 <p align="center">
-  <img src="screenshots/login_screen.png" width="250" alt="Login Screen">
-  <img src="screenshots/home_empty.png" width="250" alt="Home Screen - Empty State">
-  <img src="screenshots/home_orders.png" width="250" alt="Home Screen - Orders List">
+  <img src="screenshots/2.png" width="250" alt="Login Screen">
+  <img src="screenshots/1.png" width="250" alt="Home Screen - Empty State">
+  <img src="screenshots/3.png" width="250" alt="Home Screen - Orders List">
 </p>
 
 <p align="center">
-  <img src="screenshots/language_selector.png" width="250" alt="Language Selection">
-  <img src="screenshots/order_details.png" width="250" alt="Order Details">
-  <img src="screenshots/orders_filtered.png" width="250" alt="Filtered Orders">
+  <img src="screenshots/4.png" width="250" alt="Language Selection">
+  <img src="screenshots/6.png" width="250" alt="Order Details">
+  <img src="screenshots/5.png" width="250" alt="Filtered Orders">
 </p>
 ## Technical Architecture
 
