@@ -7,7 +7,7 @@ class AppToast {
     required BuildContext context,
     required String message,
     String? title,
-    Duration duration = const Duration(seconds: 5),
+    Duration duration = const Duration(seconds: 3),
     Alignment alignment = Alignment.topRight,
   }) {
     return _showToast(
@@ -27,7 +27,7 @@ class AppToast {
     required BuildContext context,
     required String message,
     String? title,
-    Duration duration = const Duration(seconds: 5),
+    Duration duration = const Duration(seconds: 3),
     Alignment alignment = Alignment.topRight,
   }) {
     return _showToast(
@@ -47,7 +47,7 @@ class AppToast {
     required BuildContext context,
     required String message,
     String? title,
-    Duration duration = const Duration(seconds: 5),
+    Duration duration = const Duration(seconds: 3),
     Alignment alignment = Alignment.topRight,
   }) {
     return _showToast(
@@ -67,7 +67,7 @@ class AppToast {
     required BuildContext context,
     required String message,
     String? title,
-    Duration duration = const Duration(seconds: 5),
+    Duration duration = const Duration(seconds: 3),
     Alignment alignment = Alignment.topRight,
   }) {
     return _showToast(
@@ -96,6 +96,7 @@ class AppToast {
     return toastification.show(
       context: context,
       type: type,
+
       style: ToastificationStyle.flat,
       autoCloseDuration: duration,
       title: Text(title),
@@ -125,7 +126,7 @@ class AppToast {
           spreadRadius: 0,
         )
       ],
-      showProgressBar: true,
+      showProgressBar: false,
       closeButton: ToastCloseButton(
         showType: CloseButtonShowType.onHover,
         buttonBuilder: (context, onClose) {

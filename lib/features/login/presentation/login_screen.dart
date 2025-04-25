@@ -12,7 +12,6 @@ import 'package:delivery/core/constants/colors.dart';
 
 import '../../../core/constants/image.dart';
 import '../../../core/utils/app_toast.dart';
-import 'manger/AuthProvider.dart';
 import 'manger/auth_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _deliveryNoController = TextEditingController(text: '1010');
   final _passwordController = TextEditingController(text: '1');
-  bool _passwordVisible = false;
 
   @override
   void dispose() {
@@ -144,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                  Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2.0),
                       child: Text(
-                        _passwordVisible ? 'Show More' : 'Show More'.tr(),
+                      'Show More'.tr(),
                         style: TextStyle(
                           color: AppColors.primaryDark,
                           fontSize: 14,

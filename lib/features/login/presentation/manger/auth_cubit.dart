@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+import '../../../../core/utils/Global.dart';
+import '../../data/model/User.dart';
 import '../../data/repository/AuthRepository.dart';
 import 'SessionManager.dart';
 
@@ -66,6 +68,7 @@ print('_languageNo: $_languageNo');
         await _updateAppLocale(context);
 
         emit(AuthAuthenticated(deliveryNo));
+        Global.user = user;
         AppToast.success(context: context, message: 'Welcome back, ${user.name}');
         _sessionManager.start();
       } else {
@@ -76,12 +79,18 @@ print('_languageNo: $_languageNo');
       emit(AuthFailure(e.toString()));
     }
   }
+  //getLoggedInUser
+  Future<User?> getLoggedInUser() async {
+    final user = await _authRepository.getLoggedInUser();
+return user;
+  }
 
   Future<void> _saveCredentials() async {
     await _sharedPreferences.setString('deliveryNo', _deliveryNo!);
     await _sharedPreferences.setString('languageNo', _languageNo!);
     // await _sharedPreferences.setString('token', _token!);
   }
+
 
   Future<void> changeLanguage(String languageNo, {BuildContext? context}) async {
     languageNo == 'ar'?

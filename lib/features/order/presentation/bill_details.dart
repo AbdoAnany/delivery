@@ -1,3 +1,4 @@
+import 'package:delivery/core/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -142,6 +143,7 @@ class _BillDetailScreenState extends State<BillDetailScreenOverview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text('Bill #${widget.bill.billNo}'),
       ),
@@ -186,6 +188,7 @@ class _BillDetailScreenState extends State<BillDetailScreenOverview> {
 
   Widget _buildBillDetailsCard(BuildContext context) {
     return Card(
+
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

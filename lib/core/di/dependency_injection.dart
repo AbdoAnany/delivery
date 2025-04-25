@@ -8,7 +8,6 @@ import '../../features/login/data/datasources/local/AuthLocalDataSource.dart';
 import '../../features/login/data/datasources/remote/AuthRemoteDataSource.dart';
 import '../../features/login/data/datasources/remote/api_service.dart';
 import '../../features/login/data/repository/AuthRepository.dart';
-import '../../features/login/presentation/manger/AuthProvider.dart';
 import '../../features/login/presentation/manger/SessionManager.dart';
 import '../../features/login/presentation/manger/auth_cubit.dart';
 import '../../features/order/data/repositories/order_repository.dart';
@@ -56,7 +55,7 @@ Future<void> _registerDataSources() async {
       DeliveryRemoteDataSourceImpl(apiClient: getIt<ApiClient>())
   );
   getIt.registerSingleton<DeliveryLocalDataSourceImpl>(
-      DeliveryLocalDataSourceImpl(sharedPreferences: getIt<SharedPreferences>())
+      DeliveryLocalDataSourceImpl.instance
   );
 }
 

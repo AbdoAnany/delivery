@@ -14,6 +14,7 @@ import 'features/login/data/repository/AuthRepository.dart';
 import 'features/login/presentation/manger/SessionManager.dart';
 import 'features/login/presentation/manger/auth_cubit.dart';
 import 'features/login/presentation/login_screen.dart';
+import 'features/order/data/services/cache_service.dart';
 import 'features/order/presentation/order_screen.dart';
 import 'features/splash/splash.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -21,6 +22,8 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   // Initialize Flutter bindings
   WidgetsFlutterBinding.ensureInitialized();
+
+  await DeliveryLocalDataSourceImpl.instance.database;
 
   // Initialize localization
   await EasyLocalization.ensureInitialized();
@@ -89,6 +92,30 @@ class MyApp extends StatelessWidget {
 
   ThemeData _buildAppTheme() {
     return ThemeData(
+      cardColor: AppColors.white,
+      cardTheme: CardTheme(
+        color: AppColors.white,
+        surfaceTintColor:      AppColors.white,
+
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      scaffoldBackgroundColor: AppColors.background,
+      appBarTheme:  AppBarTheme(
+        backgroundColor: AppColors.primary,
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: AppColors.white,
+          size: 24.sp,
+        ),
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          color: AppColors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         primary: AppColors.primary,

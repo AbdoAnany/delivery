@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/image.dart';
 import '../../../core/di/dependency_injection.dart';
+import '../../../core/utils/Global.dart';
 import '../../login/presentation/manger/auth_cubit.dart';
 import '../../login/presentation/widget/LanguageSelector.dart';
 import '../data/repositories/order_repository.dart';
@@ -57,30 +58,19 @@ class OrdersView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
+            Container(
+              width: MediaQuery.of(context).size.width*.5,
               padding: EdgeInsets.only(left: 16.0.w, top: 46.h),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Ahmed',
-                    style: TextStyle(
-                      height: .5,
-                      fontSize: 25.sp,
-                      color: AppColors.white,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                  Text(
-                    'Othman',
-                    style: TextStyle(
-                      fontSize: 25.sp,
-                      color: AppColors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+              child:      Text(
+                Global.user?.name??'No Name',
+                maxLines: 2,
+                style: TextStyle(
+                  // height: .5,
+                  fontSize: 25.sp,
+                  overflow: TextOverflow.ellipsis,
+                  color: AppColors.white,
+                  fontWeight: FontWeight.w300,
+                ),
               ),
             ),
             _buildProfileImage(context),

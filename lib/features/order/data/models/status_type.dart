@@ -13,4 +13,14 @@ class StatusTypeModel {
       typNm: json['TYP_NM'] ?? '',
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'TYP_NO': typNo,
+      'TYP_NM': typNm,
+    };
+  }
+
+  factory StatusTypeModel.fromDb(Map<String, dynamic> db) {
+    return StatusTypeModel.fromJson(db);
+  }
 }

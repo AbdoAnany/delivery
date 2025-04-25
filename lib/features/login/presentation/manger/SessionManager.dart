@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'package:delivery/core/di/dependency_injection.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/utils/Global.dart';
+import '../../../order/presentation/manger/orders_cubit.dart';
 
 class SessionManager with WidgetsBindingObserver {
   Timer? _sessionTimer;
-  final Duration _sessionDuration = const Duration(seconds: 30);
+  final Duration _sessionDuration = const Duration(minutes: 2);
   final VoidCallback? _onSessionExpired;
 
   SessionManager({VoidCallback? onSessionExpired})
@@ -16,11 +20,17 @@ class SessionManager with WidgetsBindingObserver {
 
   void _startSessionTimer() {
     _sessionTimer?.cancel();
-    _sessionTimer = Timer(_sessionDuration, () {
+    _sessionTimer = Timer(_sessionDuration, () async {
       print('⏰ Session expired due to inactivity');
-
+    await  _clearCache();
       _onSessionExpired?.call();
     });
+  }
+  _clearCache() async {
+
+    _sessionTimer?.cancel();
+    Global.user= null;
+   await getIt<OrdersCubit>().clearOrders();
   }
 
   void resetSessionTimer() {

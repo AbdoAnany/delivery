@@ -62,6 +62,10 @@ class DeliveryBillModel {
     );
   }
 
+  factory DeliveryBillModel.fromDb(Map<String, dynamic> db) {
+    return DeliveryBillModel.fromJson(db);
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'BILL_SRL': billSrl,
@@ -125,6 +129,6 @@ class DeliveryBillModel {
   }
 
   double get totalWithTaxAndDelivery {
-    return (totalAmount) + (taxAmount ?? 0) + (deliveryAmount ?? 0);
+    return totalAmount + (taxAmount ?? 0) + (deliveryAmount ?? 0);
   }
 }
