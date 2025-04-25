@@ -12,8 +12,8 @@ class OrdersInitial extends OrdersState {}
 class OrdersLoading extends OrdersState {}
 
 class OrdersLoaded extends OrdersState {
-  final List<Order> allOrders;
-  final List<Order> filteredOrders;
+  final List<DeliveryBillModel> allOrders;
+  final List<DeliveryBillModel> filteredOrders;
 
   const OrdersLoaded(this.allOrders, this.filteredOrders);
 

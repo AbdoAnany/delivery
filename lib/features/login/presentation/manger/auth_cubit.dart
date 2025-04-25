@@ -1,30 +1,52 @@
-// auth_cubit.dart
-import 'package:delivery/features/login/data/repository/AuthRepository.dart';
+import 'package:delivery/core/utils/app_toast.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 
+import '../../data/repository/AuthRepository.dart';
 import 'SessionManager.dart';
-import 'auth_state.dart';
+
+part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _authRepository;
+  final SharedPreferences _sharedPreferences;
   final SessionManager _sessionManager;
 
   AuthCubit({
     required AuthRepository authRepository,
+    required SharedPreferences sharedPreferences,
     required SessionManager sessionManager,
   })  : _authRepository = authRepository,
+        _sharedPreferences = sharedPreferences,
         _sessionManager = sessionManager,
         super(AuthInitial()) {
-    // Initialize session timer on creation
-    // _sessionManager.(() {
-    //   logout();
-    // });
+    _loadSavedCredentials();
+  }
+
+  String? _deliveryNo;
+  String? _languageNo;
+  // String? _token;
+
+  String? get deliveryNo => _deliveryNo;
+  String get languageNo => _languageNo ?? '2'; // Default to Arabic
+
+  Future<void> _loadSavedCredentials() async {
+    _deliveryNo = _sharedPreferences.getString('deliveryNo');
+    _languageNo = _sharedPreferences.getString('languageNo') ?? '2';
+print('_languageNo: $_languageNo');
+    if (_deliveryNo != null) {
+      emit(AuthAuthenticated(_deliveryNo!));
+      _sessionManager.start();
+    }
   }
 
   Future<void> login({
     required String deliveryNo,
     required String password,
     required String languageNo,
+    required BuildContext context,
   }) async {
     emit(AuthLoading());
 
@@ -36,29 +58,55 @@ class AuthCubit extends Cubit<AuthState> {
       );
 
       if (user != null) {
-        // Start session timer
-        // _sessionManager.startSessionTimer();
-        emit(AuthSuccess(user));
+        _deliveryNo = deliveryNo;
+        _languageNo = languageNo;
+        // _token = user.token; // Assuming user has a token property
+
+        await _saveCredentials();
+        await _updateAppLocale(context);
+
+        emit(AuthAuthenticated(deliveryNo));
+        AppToast.success(context: context, message: 'Welcome back, ${user.name}');
+        _sessionManager.start();
       } else {
-        emit(const AuthFailure('Invalid credentials'));
+        AppToast.error(context: context, message: 'Invalid credentials');
+        emit(AuthFailure('Invalid credentials'));
       }
     } catch (e) {
       emit(AuthFailure(e.toString()));
     }
   }
-  Future<void> changeLanguage(String languageNo) async {
-    // _languageNo = languageNo;
-    // await sharedPreferences.setString('languageNo', languageNo);
-    // notifyListeners();
-  }
-  void logout() {
-    _authRepository.logout();
-    _sessionManager.resetSessionTimer();
-    emit(AuthInitial());
+
+  Future<void> _saveCredentials() async {
+    await _sharedPreferences.setString('deliveryNo', _deliveryNo!);
+    await _sharedPreferences.setString('languageNo', _languageNo!);
+    // await _sharedPreferences.setString('token', _token!);
   }
 
-  void resetSession() {
+  Future<void> changeLanguage(String languageNo, {BuildContext? context}) async {
+    languageNo == 'ar'?
+      languageNo = '1':
+      languageNo = '2';
+    _languageNo = languageNo;
+    await _sharedPreferences.setString('languageNo', languageNo);
+
+    if (context != null) {
+      await _updateAppLocale(context);
+    }
+
+    emit(AuthLanguageChanged(languageNo));
+  }
+
+  Future<void> _updateAppLocale(BuildContext context) async {
+    final localeCode = _languageNo == '2' ? 'en' : 'ar';
+    await context.setLocale(Locale(localeCode));
+  }
+
+  Future<void> logout() async {
+    await _sharedPreferences.clear();
+    // _token = null;
     _sessionManager.resetSessionTimer();
+    emit(AuthInitial());
   }
 
   @override

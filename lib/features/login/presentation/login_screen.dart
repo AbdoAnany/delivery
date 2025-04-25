@@ -1,15 +1,19 @@
 // login_screen.dart
+import 'package:delivery/core/di/dependency_injection.dart';
 import 'package:delivery/features/login/presentation/widget/CustomTextField.dart';
 import 'package:delivery/features/login/presentation/widget/LanguageSelector.dart';
+import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:delivery/core/constants/colors.dart';
 
-import '../../../core/AppColor.dart';
+
+import '../../../core/constants/image.dart';
+import '../../../core/utils/app_toast.dart';
 import 'manger/AuthProvider.dart';
 import 'manger/auth_cubit.dart';
-import 'manger/auth_state.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -33,11 +37,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
-
     context.read<AuthCubit>().login(
       deliveryNo: _deliveryNoController.text,
       password: _passwordController.text,
-      languageNo: '2',
+      languageNo: getIt<AuthCubit>().languageNo, context: context,
     );
   }
 
@@ -60,10 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          } else if (state is AuthSuccess) {
+            AppToast.error(context: context, message: 'An error occurred: ${state.message.toString()}');
+
+          } else if (state is AuthAuthenticated) {
             Navigator.pushReplacementNamed(context, '/home');
           }
         },
@@ -74,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child:  Form(
                 key: _formKey,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // App logo and language selector area
 
@@ -84,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Welcome message
                     Center(
                       child: Text(
-                        'Welcome Back!',
+                        'Welcome Back!'.tr(),
                         style: TextStyle(
                           fontSize: 29.sp,
                           fontWeight: FontWeight.bold,
@@ -98,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     Center(
                       child: Text(
-                        'Log back into your account',
+                        'Log back into your account'.tr(),
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: AppColors.textPrimary,
@@ -124,25 +126,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     CustomTextField(
                       controller: _passwordController,
                       hintText: 'Password',
-                      obscureText: !_passwordVisible,
+                      // obscureText: !_passwordVisible,
                       validator: (value) => value?.isEmpty ?? true
                           ? 'Password is required'
                           : null,
-                      suffixIcon: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _passwordVisible = !_passwordVisible;
-                          });
-                        },
-
-                      ),
+                      // suffixIcon: GestureDetector(
+                      //   onTap: () {
+                      //     setState(() {
+                      //       _passwordVisible = !_passwordVisible;
+                      //     });
+                      //   },
+                      //
+                      // ),
                     ),
 
                      SizedBox(height: 27.h),
                  Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2.0),
                       child: Text(
-                        _passwordVisible ? 'Hide' : 'Show More',
+                        _passwordVisible ? 'Show More' : 'Show More'.tr(),
                         style: TextStyle(
                           color: AppColors.primaryDark,
                           fontSize: 14,
@@ -157,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: double.infinity,
                       height: 44.h,
                       child: CustomButton(
-                        text: 'Log in',
+                        text: 'Login'.tr(),
                         isLoading: state is AuthLoading,
                         onPressed: _login,
                       ),
@@ -183,60 +185,74 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+    return Directionality(
+      textDirection: TextDirection.ltr,
 
-        Padding(
-          padding:  EdgeInsets.only(left: 26.0.w,
-              top: 54.h),
-          child: Image.asset(
-            AppImages.logo,
-            height: 74.h,
-            width: 170.w,
-            // width: 170.w,
-          ),
-        ),
 
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            Image.asset(
-              AppImages.ic_circlex2,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
 
+          Padding(
+            padding:  EdgeInsets.only(left: 26.0.w,
+                top: 54.h),
+            child: Image.asset(
+              AppImages.logo,
+              height: 74.h,
+              width: 170.w,
               // width: 170.w,
             ),
+          ),
 
-             Padding(
-               padding: EdgeInsets.only(
-                 top: 16,
-                 left: 16.w,right: 0,),
-               child: IconButton(
-                  icon:Image.asset(AppImages.ic_language
-                  ,width: 28.sp,
-                    height: 28.sp,
-                    color: AppColors.white,
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Image.asset(
+                AppImages.ic_circlex2,
+
+                // width: 170.w,
+              ),
+
+               Padding(
+                 padding: EdgeInsets.only(
+                   top: 16,
+                   left: 16.w,right: 0,),
+                 child: IconButton(
+                    icon:Image.asset(AppImages.ic_language
+                    ,width: 28.sp,
+                      height: 28.sp,
+                      color: AppColors.white,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierColor: AppColors.black.withOpacity(0.40),
+                        builder: (context) => LanguageSelector(
+                          currentLanguage: getIt<AuthCubit>().languageNo=='2'?'en':'ar',
+                          onLanguageSelected: (languageCode) async {
+                            // Handle language change
+                            print('Language selected: $languageCode');
+
+                         await  getIt<AuthCubit>().changeLanguage(languageCode,
+                             context: context);
+
+                            // Update the state to reflect the selected language
+                            // You can also use a state management solution like Provider or Bloc for this);
+                         setState(() {
+
+                         });
+
+                          },
+                        ),
+                      );
+                    },
                   ),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      barrierColor: AppColors.black.withOpacity(0.40),
-                      builder: (context) => LanguageSelector(
-                        currentLanguage: 'en', // Get current language from your state
-                        onLanguageSelected: (languageCode) {
-                          // Handle language change
-                          Provider.of<AuthProvider>(context, listen: false)
-                              .changeLanguage(languageCode);
-                        },
-                      ),
-                    );
-                  },
-                ),
-             )
-          ],
-        ),
-      ],
+               )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/AppColor.dart';
-import '../../data/models/order.dart';
+import '../../../../core/constants/colors.dart';
+import '../../data/models/delivery_bill.dart';
 
 class OrderItem extends StatelessWidget {
-  final Order order;
-  final Function(Order) onTap;
+  final DeliveryBillModel order;
+  final Function(DeliveryBillModel) onTap;
 
   const OrderItem({
     Key? key,
@@ -209,7 +209,6 @@ class OrderItem extends StatelessWidget {
     );
   }
   static String _mapStatusFlag(String flag) {
-    print('Flag: $flag');
     switch (flag) {
       case '0':
         return 'New';

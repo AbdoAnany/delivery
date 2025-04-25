@@ -1,7 +1,7 @@
 // auth_remote_datasource.dart
 import 'package:dio/dio.dart';
 
-import '../../../../../core/AppColor.dart';
+import '../../../../../core/constants/api_constants.dart';
 
 class AuthRemoteDataSource {
   late final Dio _dio;

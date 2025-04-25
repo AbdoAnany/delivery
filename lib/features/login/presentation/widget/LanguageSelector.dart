@@ -1,10 +1,12 @@
 
 
 import 'package:delivery/features/login/presentation/widget/CustomTextField.dart';
+import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/AppColor.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/image.dart';
 
 
 class LanguageSelector extends StatefulWidget {
@@ -35,16 +37,16 @@ class _LanguageSelectorState extends State<LanguageSelector> {
     return AlertDialog(
       // In the AlertDialog
       title: Text(
-        'Choose Language',
+        'Choose Language'.tr(),
         style: TextStyle(
           fontSize: 12.sp,
           color: AppColors.primaryDark,
           fontWeight: FontWeight.bold,
         ),
       ),
-      titlePadding: EdgeInsets.only(top: 30.h,
+      titlePadding: EdgeInsetsDirectional.only(top: 30.h,
           bottom: 20.h,
-          left: 20.w),
+          start: 20.w),
       contentPadding:  EdgeInsets.symmetric(
         horizontal: 17.w,
       ),
@@ -52,34 +54,37 @@ class _LanguageSelectorState extends State<LanguageSelector> {
           horizontal: 17.w,
           ),
       backgroundColor: AppColors.fillColor2,
-      content: SizedBox(
-        height: 44.h,
-        width: MediaQuery.of(context).size.width,
+      content: Directionality(
+        textDirection: TextDirection.ltr,
+        child: SizedBox(
+          height: 44.h,
+          width: MediaQuery.of(context).size.width,
 
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:  [
-            Expanded(
-              child: _buildLanguageOption(
-                languageCode: 'ar',
-                image: AppImages.arabic,
-                displayName: 'العربية',
-                englishName: 'Arabic',
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:  [
+              Expanded(
+                child: _buildLanguageOption(
+                  languageCode: 'ar',
+                  image: AppImages.arabic,
+                  displayName: 'العربية',
+                  englishName: 'Arabic',
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
+              const SizedBox(width: 10),
 
-            Expanded(
-              child: _buildLanguageOption(
-                languageCode: 'en',
-                image: AppImages.english,
+              Expanded(
+                child: _buildLanguageOption(
+                  languageCode: 'en',
+                  image: AppImages.english,
 
-                displayName: 'English',
-                englishName: 'English',
+                  displayName: 'English',
+                  englishName: 'English',
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       actions: [
@@ -92,8 +97,8 @@ class _LanguageSelectorState extends State<LanguageSelector> {
               widget.onLanguageSelected(_selectedLanguage);
               Navigator.pop(context);
             },
-            radius: 12,
-            text: 'Apply',
+            radius: 12.sp,
+            text: 'Apply'.tr(),
 
           ),
         ),

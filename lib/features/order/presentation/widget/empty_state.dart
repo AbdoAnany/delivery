@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/AppColor.dart';
+import 'package:delivery/core/constants/colors.dart';
+
+import '../../../../core/constants/image.dart';
 
 
 class EmptyState extends StatelessWidget {

@@ -1,4 +1,4 @@
-class Order {
+class DeliveryBillModel {
   final String billSrl;
   final String billType;
   final String billNo;
@@ -18,7 +18,7 @@ class Order {
   final double? latitude;
   final double? longitude;
 
-  Order({
+  DeliveryBillModel({
     required this.billSrl,
     required this.billType,
     required this.billNo,
@@ -39,8 +39,8 @@ class Order {
     this.longitude,
   });
 
-  factory Order.fromJson(Map<String, dynamic> json) {
-    return Order(
+  factory DeliveryBillModel.fromJson(Map<String, dynamic> json) {
+    return DeliveryBillModel(
       billSrl: json['BILL_SRL']?.toString() ?? '',
       billType: json['BILL_TYPE']?.toString() ?? '',
       billNo: json['BILL_NO']?.toString() ?? '',

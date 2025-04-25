@@ -1,34 +1,25 @@
-// auth_state.dart
-import 'package:equatable/equatable.dart';
+part of 'auth_cubit.dart';
 
-import '../../data/model/User.dart';
-
-abstract class AuthState extends Equatable {
-  const AuthState();
-
-  @override
-  List<Object?> get props => [];
-}
+sealed class AuthState {}
 
 class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
-class AuthSuccess extends AuthState {
-  final User user;
+class AuthAuthenticated extends AuthState {
+  final String deliveryNo;
 
-  const AuthSuccess(this.user);
-
-  @override
-  List<Object?> get props => [user];
+  AuthAuthenticated(this.deliveryNo);
 }
 
+class AuthLanguageChanged extends AuthState {
+  final String languageNo;
+
+  AuthLanguageChanged(this.languageNo);
+}
 
 class AuthFailure extends AuthState {
   final String message;
 
-  const AuthFailure(this.message);
-
-  @override
-  List<Object?> get props => [message];
+  AuthFailure(this.message);
 }

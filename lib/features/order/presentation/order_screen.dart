@@ -4,11 +4,15 @@ import 'package:delivery/features/order/presentation/widget/order_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../core/AppColor.dart';
 
-import '../../login/presentation/HomeScreen.dart';
+import '../../../core/constants/colors.dart';
+import '../../../core/constants/image.dart';
+import '../../../core/di/dependency_injection.dart';
+import '../../login/presentation/manger/auth_cubit.dart';
+import '../../login/presentation/widget/LanguageSelector.dart';
 import '../data/repositories/order_repository.dart';
 
+import 'bill_details.dart';
 import 'manger/orders_cubit.dart';
 
 class OrdersScreen extends StatelessWidget {
@@ -19,7 +23,7 @@ class OrdersScreen extends StatelessWidget {
     return BlocProvider(
       create:
           (context) =>
-              OrdersCubit(orderRepository: OrderRepository())..fetchOrders(),
+             getIt<OrdersCubit>()..getDeliveryBills(),
       child: const OrdersView(),
     );
   }
@@ -43,41 +47,45 @@ class OrdersView extends StatelessWidget {
   }
 
   Widget _buildHeader(context) {
-    return Container(
-      height: 127.h,
-      color: AppColors.primary,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 16.0.w, top: 46.h),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Ahmed',
-                  style: TextStyle(
-                    height: .5,
-                    fontSize: 25.sp,
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w300,
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        height: 127.h,
+
+        color: AppColors.primary,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 16.0.w, top: 46.h),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Ahmed',
+                    style: TextStyle(
+                      height: .5,
+                      fontSize: 25.sp,
+                      color: AppColors.white,
+                      fontWeight: FontWeight.w300,
+                    ),
                   ),
-                ),
-                Text(
-                  'Othman',
-                  style: TextStyle(
-                    fontSize: 25.sp,
-                    color: AppColors.white,
-                    fontWeight: FontWeight.bold,
+                  Text(
+                    'Othman',
+                    style: TextStyle(
+                      fontSize: 25.sp,
+                      color: AppColors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          _buildProfileImage(context),
-        ],
+            _buildProfileImage(context),
+          ],
+        ),
       ),
     );
   }
@@ -99,27 +107,49 @@ alignment: Alignment.centerRight,
             ),
           ),
 
-          child: Container(
-            margin: EdgeInsets.only( right: 17.w),
-            // width: 24.sp,
-            // height: 24.sp,
-            padding: EdgeInsets.all(8.sp),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(5.5),
-              // boxShadow: const [
-              //   BoxShadow(
-              //     color: Colors.grey,
-              //     blurRadius: 6,
-              //     offset: Offset(0, 3),
-              //   ),
-              // ],
-            ),
-            child: Image.asset(
-              AppImages.ic_language,
-              fit: BoxFit.contain,
-              width: 16.sp,
-              height: 16.sp,
+          child: GestureDetector(
+            onTap: () {
+
+                showDialog(
+                  context: context,
+                  barrierColor: AppColors.black.withOpacity(0.40),
+                  builder: (context) => LanguageSelector(
+                    currentLanguage: getIt<AuthCubit>().languageNo=='2'?'en':'ar',
+                    onLanguageSelected: (languageCode) async {
+                      // Handle language change
+                      print('Language selected: $languageCode');
+
+                      await  getIt<AuthCubit>().changeLanguage(languageCode,
+                          context: context);
+
+
+                    },
+                  ),
+                );
+
+            },
+            child: Container(
+              margin: EdgeInsets.only( right: 17.w),
+              // width: 24.sp,
+              // height: 24.sp,
+              padding: EdgeInsets.all(8.sp),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(5.5),
+                // boxShadow: const [
+                //   BoxShadow(
+                //     color: Colors.grey,
+                //     blurRadius: 6,
+                //     offset: Offset(0, 3),
+                //   ),
+                // ],
+              ),
+              child: Image.asset(
+                AppImages.ic_language,
+                fit: BoxFit.contain,
+                width: 16.sp,
+                height: 16.sp,
+              ),
             ),
           ),
         ),
@@ -197,7 +227,7 @@ alignment: Alignment.centerRight,
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => context.read<OrdersCubit>().fetchOrders(),
+                    onPressed: () => context.read<OrdersCubit>().getDeliveryBills(),
                     child: const Text('Retry'),
                   ),
                 ],
@@ -209,15 +239,21 @@ alignment: Alignment.centerRight,
               return const EmptyState();
             }
             return RefreshIndicator(
-              onRefresh: () => context.read<OrdersCubit>().fetchOrders(),
+              onRefresh: () => context.read<OrdersCubit>().getDeliveryBills(),
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: orders.length,
                 itemBuilder: (context, index) {
                   return OrderItem(
                     order: orders[index],
-                    onTap: (order) {
-                      // Handle order tap
+                    onTap: (bill) {
+                      // Handle order item tap
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BillDetailScreen(bill: bill, ),
+                        ),
+                      );
                     },
                   );
                 },

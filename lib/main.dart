@@ -1,23 +1,42 @@
 // main.dart
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toastification/toastification.dart';
 
-import 'core/AppColor.dart';
-import 'features/login/data/datasources/local/AuthLocalDataSource.dart';
-import 'features/login/data/datasources/remote/AuthRemoteDataSource.dart';
+import 'core/constants/colors.dart';
+import 'core/di/dependency_injection.dart';
 import 'features/login/data/repository/AuthRepository.dart';
-import 'features/login/presentation/HomeScreen.dart';
-import 'features/login/presentation/login_screen.dart';
 import 'features/login/presentation/manger/SessionManager.dart';
 import 'features/login/presentation/manger/auth_cubit.dart';
+import 'features/login/presentation/login_screen.dart';
 import 'features/order/presentation/order_screen.dart';
 import 'features/splash/splash.dart';
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+Future<void> main() async {
+  // Initialize Flutter bindings
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
-  runApp(const MyApp());
+  // Initialize localization
+  await EasyLocalization.ensureInitialized();
+
+  // Setup dependency injection
+  await setupDependencies();
+
+  // Run the app with localization support
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('ar')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -29,66 +48,66 @@ class MyApp extends StatelessWidget {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (context, child) {
+      builder: (context, _) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        child: MultiProvider(
+          providers: [
 
-        return MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-          textScaleFactor: 1.0, // Fixed scale factor
-        ),
+            BlocProvider(
+              create: (_) => getIt<AuthCubit>(),
+            ),
+          ],
+          child: Builder(
+            builder: (context) => ActivityAwareApp(
+              sessionManager: getIt<SessionManager>(),
+              child: ToastificationConfigProvider(
+                config: const ToastificationConfig(
+                  // margin: EdgeInsets.fromLTRB(0, 16, 0, 110),
+                  alignment: Alignment.center,
+                  itemWidth: 440,
+                  animationDuration: Duration(milliseconds: 500),
+                ),
+                child:  MaterialApp(
+                  title: 'Onyx Delivery'.tr(),
+                  navigatorKey: navigatorKey,
 
-            child: MultiRepositoryProvider(
-            providers: [
-              RepositoryProvider(create: (context) => AuthRemoteDataSource()),
-              RepositoryProvider(create: (context) => AuthLocalDataSource()),
-              RepositoryProvider(create: (context) => SessionManager()),
-              RepositoryProvider(
-                create: (context) => AuthRepository(
-                  remoteDataSource: context.read(),
-                  localDataSource: context.read(),
+                  debugShowCheckedModeBanner: false,
+                  localizationsDelegates: context.localizationDelegates,
+                  supportedLocales: context.supportedLocales,
+                  locale: context.locale,
+                  theme: _buildAppTheme(),
+                  initialRoute: '/splash',
+                  routes: _buildAppRoutes(),
                 ),
-              ),
-            ],
-            child: MultiBlocProvider(
-              providers: [
-                BlocProvider(
-                  create: (context) => AuthCubit(
-                    authRepository: context.read(),
-                    sessionManager: context.read(),
-                  ),
-                ),
-              ],
-              child: Builder(
-                builder: (context) {
-                  return ActivityAwareApp(
-                    sessionManager: context.read<SessionManager>(),
-                    child: MaterialApp(
-                      title: 'Onyx Delivery',
-                      debugShowCheckedModeBanner: false,
-                      theme: ThemeData(
-                        colorScheme: ColorScheme.fromSeed(
-                          seedColor: AppColors.primary,
-                          primary: AppColors.primary,
-                        ),
-                        useMaterial3: true,
-                        fontFamily: GoogleFonts.montserrat().fontFamily,
-                      ),
-                      initialRoute: '/splash',
-                      routes: {
-                        '/splash': (context) =>  SplashScreen(),
-                        '/login': (context) => const LoginScreen(),
-                        '/home': (context) => const OrdersScreen(),
-                      },
-                    ),
-                  );
-                },
               ),
             ),
-                    ),
-          );
-      },
+          ),
+        ),
+      ),
     );
   }
+
+  ThemeData _buildAppTheme() {
+    return ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primary,
+        primary: AppColors.primary,
+      ),
+      useMaterial3: true,
+      fontFamily: GoogleFonts.montserrat().fontFamily,
+    );
+  }
+
+  Map<String, WidgetBuilder> _buildAppRoutes() {
+    return {
+      '/splash': (context) => SplashScreen(),
+      '/login': (context) => const LoginScreen(),
+      // '/language': (context) => const LanguageSelectionScreen(),
+      '/home': (context) => const OrdersScreen(),
+    };
+  }
 }
+
 class ActivityAwareApp extends StatefulWidget {
   final Widget child;
   final SessionManager sessionManager;
@@ -105,12 +124,25 @@ class ActivityAwareApp extends StatefulWidget {
 
 class _ActivityAwareAppState extends State<ActivityAwareApp> {
   @override
+  void initState() {
+    super.initState();
+
+    widget.sessionManager
+      ..dispose()
+      ..start();
+  }
+
+  @override
+  void dispose() {
+    widget.sessionManager.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Listener(
       behavior: HitTestBehavior.translucent,
-      onPointerDown: (_) {
-        widget.sessionManager.userActivity();
-      },
+      onPointerDown: (_) => widget.sessionManager.resetSessionTimer(),
       child: widget.child,
     );
   }

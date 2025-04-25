@@ -1,6 +1,8 @@
-import 'package:delivery/core/AppColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../core/constants/colors.dart';
+import '../../core/constants/image.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
