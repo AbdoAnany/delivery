@@ -1,4 +1,4 @@
-# QIX Delivery
+# QNX Delivery
 
 A Flutter-based mobile application for delivery management, featuring efficient order tracking, status management, and seamless offline capabilities.
 
