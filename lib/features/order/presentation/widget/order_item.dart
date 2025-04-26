@@ -1,4 +1,4 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/colors.dart';
@@ -47,7 +47,9 @@ class OrderItem extends StatelessWidget {
           children: [
             Text(
               '#${order.billNo}',
+              textDirection: TextDirection.ltr,
               style: TextStyle(
+
 
                 color: AppColors.grey,
                 fontSize: 12.sp,
@@ -85,7 +87,7 @@ class OrderItem extends StatelessWidget {
           const SizedBox(height: 4),
           FittedBox(
             child: Text(
-              _mapStatusFlag(order.statusFlag),
+              _mapStatusFlag(order.statusFlag).trim(),
 
               style: TextStyle(
                 fontWeight: FontWeight.w700,
@@ -193,6 +195,16 @@ class OrderItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 36.h),
+              // Padding(
+              //   padding:  EdgeInsets.symmetric(horizontal: 2.0.w),
+              //   child: Text(
+              //     order.statusFlag,
+              //     maxLines: 1,
+              //     style: TextStyle(color: Colors.white, fontSize: 8.sp),
+              //     textAlign: TextAlign.center,
+              //
+              //   ),
+              // ),
               Padding(
                 padding:  EdgeInsets.symmetric(horizontal: 2.0.w),
                 child: Text(

@@ -17,6 +17,7 @@ import 'features/login/presentation/login_screen.dart';
 import 'features/order/data/services/cache_service.dart';
 import 'features/order/presentation/order_screen.dart';
 import 'features/splash/splash.dart';
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
@@ -55,7 +56,6 @@ class MyApp extends StatelessWidget {
         data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
         child: MultiProvider(
           providers: [
-
             BlocProvider(
               create: (_) => getIt<AuthCubit>(),
             ),
@@ -70,10 +70,9 @@ class MyApp extends StatelessWidget {
                   itemWidth: 440,
                   animationDuration: Duration(milliseconds: 500),
                 ),
-                child:  MaterialApp(
+                child: MaterialApp(
                   title: 'Onyx Delivery'.tr(),
                   navigatorKey: navigatorKey,
-
                   debugShowCheckedModeBanner: false,
                   localizationsDelegates: context.localizationDelegates,
                   supportedLocales: context.supportedLocales,
@@ -95,14 +94,13 @@ class MyApp extends StatelessWidget {
       cardColor: AppColors.white,
       cardTheme: CardTheme(
         color: AppColors.white,
-        surfaceTintColor:      AppColors.white,
-
+        surfaceTintColor: AppColors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
       ),
       scaffoldBackgroundColor: AppColors.background,
-      appBarTheme:  AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: AppColors.primary,
         elevation: 0,
         iconTheme: IconThemeData(

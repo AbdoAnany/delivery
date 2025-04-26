@@ -97,6 +97,7 @@ class DeliveryLocalDataSourceImpl {
 
 try{
   for (var bill in bills) {
+    print('bill @@@@ : $bill');
     batch.insert(
       'delivery_bills',
       _mapBillToDb(bill),
@@ -112,10 +113,10 @@ try{
     await batch.commit(noResult: true);
   }
 
-  Map<String, dynamic> _mapBillToDb(Map<String, dynamic> bill,) {
+  Map<String, dynamic> _mapBillToDb(Map<String, dynamic> bill) {
     return {
       'BILL_SRL': bill['BILL_SRL'],
-      'BILL_TYPE': bill['BILL_TYPE'] ?? '1', // Default to type 1 if not specified
+      'BILL_TYPE': bill['BILL_TYPE'] ?? '1',
       'BILL_NO': bill['BILL_NO'],
       'BILL_DATE': bill['BILL_DATE'],
       'BILL_TIME': bill['BILL_TIME'],
@@ -129,16 +130,19 @@ try{
       'CSTMR_FLOOR_NO': bill['CSTMR_FLOOR_NO'],
       'CSTMR_APRTMNT_NO': bill['CSTMR_APRTMNT_NO'],
       'CSTMR_ADDRSS': bill['CSTMR_ADDRSS'],
-      'LATITUDE': bill['LATITUDE']?.isNotEmpty == true
-          ? double.tryParse(bill['LATITUDE'])
+      'LATITUDE': bill['LATITUDE'] is String && bill['LATITUDE']!.isNotEmpty
+          ? double.tryParse(bill['LATITUDE']!)
+          : bill['LATITUDE'] is double
+          ? bill['LATITUDE']
           : null,
-      'LONGITUDE': bill['LONGITUDE']?.isNotEmpty == true
-          ? double.tryParse(bill['LONGITUDE'])
+      'LONGITUDE': bill['LONGITUDE'] is String && bill['LONGITUDE']!.isNotEmpty
+          ? double.tryParse(bill['LONGITUDE']!)
+          : bill['LONGITUDE'] is double
+          ? bill['LONGITUDE']
           : null,
       'DLVRY_STATUS_FLG': bill['DLVRY_STATUS_FLG'] ?? '0',
     };
   }
-
   Future<List<DeliveryBillModel>> getBills( {String? statusFilter}) async {
     final db = await database;
 
@@ -158,22 +162,65 @@ try{
       }
     }
 
+    // final results1 = await db.query(
+    //   'delivery_bills',
+    //   where: where.isNotEmpty ? where.substring(5) : null,
+    //   whereArgs: args.isNotEmpty ? args : null,
+    //   orderBy: 'BILL_DATE DESC, BILL_TIME DESC',
+    // );
     final results = await db.query(
       'delivery_bills',
-      where: where.isNotEmpty ? where.substring(5) : null,
-      whereArgs: args.isNotEmpty ? args : null,
-      orderBy: 'BILL_DATE DESC, BILL_TIME DESC',
+      // where: where.isNotEmpty ? where.substring(5) : null,
+      // whereArgs: args.isNotEmpty ? args : null,
+      // orderBy: 'BILL_DATE DESC, BILL_TIME DESC',
     );
 
     return results.map((json) => DeliveryBillModel.fromDb(json)).toList();
   }
+  Future<List<DeliveryBillModel>> getBillsNew({
+    String? statusFilter,
+    String? sortBy,
+    bool sortAscending = false,
+  }) async {
+    final db = await database;
+    String whereClause = '';
+    List<dynamic> whereArgs = [];
+    String orderByClause = '';
 
+    if (statusFilter != null) {
+      if (statusFilter == 'new') {
+        whereClause = 'DLVRY_STATUS_FLG = ?';
+        whereArgs = ['0'];
+      } else if (statusFilter == 'others') {
+        whereClause = 'DLVRY_STATUS_FLG != ?';
+        whereArgs = ['0'];
+      } else {
+        whereClause = 'DLVRY_STATUS_FLG = ?';
+        whereArgs = [statusFilter];
+      }
+    }
+
+    if (sortBy != null && sortBy.isNotEmpty) {
+      orderByClause = '$sortBy ${sortAscending ? 'ASC' : 'DESC'}';
+    } else {
+      orderByClause = 'BILL_DATE DESC, BILL_TIME DESC'; // Default sorting
+    }
+
+    final results = await db.query(
+      'delivery_bills',
+      where: whereClause.isNotEmpty ? whereClause : null,
+      whereArgs: whereArgs.isNotEmpty ? whereArgs : null,
+      orderBy: orderByClause.isNotEmpty ? orderByClause : null,
+    );
+
+    return results.map((json) => DeliveryBillModel.fromDb(json)).toList();
+  }
   Future<List<DeliveryBillModel>> getFilteredBills({
     String? statusFilter,
     String? dateFilter,
     String? searchQuery,
   }) async {
-    final db = await database;
+    final Database db = await database;
 
     // Build WHERE clause and args dynamically
     List<String> whereConditions = [];
@@ -220,15 +267,22 @@ try{
     String? whereClause = whereConditions.isNotEmpty
         ? whereConditions.join(' AND ')
         : null;
-    
-    // Execute the query
-    final results = await db.query(
-      'delivery_bills',
-      where: whereClause,
-      whereArgs: whereArgs,
-      orderBy: 'BILL_DATE DESC, BILL_TIME DESC',
-    );
+    print('whereClause @@@@ : $whereClause');
+    print('whereArgs @@@@ : $whereArgs');
 
+
+
+
+    //SELECT * FROM delivery_bills WHERE
+    List<Map> list = await db.rawQuery('SELECT * FROM delivery_bills');
+print(list);
+    final results = await db.rawQuery(
+      'SELECT * FROM delivery_bills',
+      // where: whereClause,
+      // whereArgs: whereArgs,
+      // orderBy: 'BILL_DATE DESC, BILL_TIME DESC',
+    );
+print('Filtered @@@@ss bills: $results');
     return results.map((json) => DeliveryBillModel.fromDb(json)).toList();
   }
 

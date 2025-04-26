@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery/core/constants/colors.dart';
 
 import '../../../../core/constants/image.dart';
+import '../manger/orders_cubit.dart';
 
 
 class EmptyState extends StatelessWidget {
@@ -37,6 +39,11 @@ class EmptyState extends StatelessWidget {
                 fontSize: 16.sp,
               ),
             ),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () => context.read<OrdersCubit>().getDeliveryBills(),
+            child: const Text('Retry'),
           ),
         ],
       ),

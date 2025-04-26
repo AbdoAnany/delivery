@@ -111,7 +111,7 @@ class AppToast {
         );
       },
       icon: Icon(icon),
-      showIcon: true,
+      // showIcon: true,
       primaryColor: primaryColor,
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
@@ -127,16 +127,16 @@ class AppToast {
         )
       ],
       showProgressBar: false,
-      closeButton: ToastCloseButton(
-        showType: CloseButtonShowType.onHover,
-        buttonBuilder: (context, onClose) {
-          return OutlinedButton.icon(
-            onPressed: onClose,
-            icon: const Icon(Icons.close, size: 20),
-            label: const Text('Close'),
-          );
-        },
-      ),
+      // closeButton: ToastCloseButton(
+      //   showType: CloseButtonShowType.onHover,
+      //   buttonBuilder: (context, onClose) {
+      //     return OutlinedButton.icon(
+      //       onPressed: onClose,
+      //       icon: const Icon(Icons.close, size: 20),
+      //       label: const Text('Close'),
+      //     );
+      //   },
+      // ),
       closeOnClick: false,
       pauseOnHover: true,
       dragToClose: true,

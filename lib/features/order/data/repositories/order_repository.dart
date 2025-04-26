@@ -15,6 +15,7 @@ abstract class DeliveryRepository {
       String langNo, {
         String? billSrl,
         String? processedFlag,
+        bool sortAscending,
       });
   Future<List<DeliveryBillModel>> getFilteredDeliveryBills(
      {
@@ -56,9 +57,10 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
       String langNo, {
         String? billSrl,
         String? processedFlag,
+        bool sortAscending=true,
       }) async {
     print('Fetching bills');
-    final bills = await localDataSource.getBills().catchError((e) => print('Error fetching bills from local: $e'));
+    final bills = await localDataSource.getBillsNew(statusFilter: processedFlag,sortAscending: sortAscending).catchError((e) => print('Error fetching bills from local: $e'));
     if (bills.isNotEmpty) {
       print('Using  cached bills ${bills.length}');
       return bills;
@@ -72,7 +74,6 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
             billSrl: billSrl,
             // processedFlag: processedFlag,
           );
-          print('Fetched ${remoteBills.length} bills from remote');
           await localDataSource.insertOrUpdateBills(remoteBills.map((bill) => bill.toJson()).toList());
           print('Inserted ${remoteBills.length} bills into local');
           return remoteBills;
@@ -85,6 +86,7 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
       }
     }
   }
+
 
   @override
   Future<List<StatusTypeModel>> getStatusTypes(String langNo) async {
@@ -138,55 +140,11 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
       throw Exception('No internet connection. Cannot update bill status');
     }
   }
-  //
-  // @override
-  // Future<List<DeliveryBillModel>> getFilteredDeliveryBills(
-  //     String deliveryNo,
-  //     String langNo, {
-  //       String? billSrl,
-  //       String? processedFlag,
-  //       String? statusFilter,
-  //       String? dateFilter,
-  //       String? searchQuery,
-  //     }) async {
-  //   try {
-  //     // First ensure we have data in the local database
-  //     final localBills = await localDataSource.getBills();
-  //
-  //     // If local database is empty and we're connected, fetch from remote and save
-  //     if (localBills.isEmpty && await _isConnected()) {
-  //       final remoteBills = await remoteDataSource.getDeliveryBills(
-  //         deliveryNo,
-  //         langNo,
-  //         billSrl: "",
-  //         processedFlag: "",
-  //       );
-  //       await localDataSource.insertOrUpdateBills(remoteBills.map((bill) => bill.toJson()).toList());
-  //     }
-  //
-  //     // Now perform the filtered query from local database
-  //     return await localDataSource.getFilteredBills(
-  //       statusFilter: statusFilter,
-  //       dateFilter: dateFilter,
-  //       searchQuery: searchQuery,
-  //     );
-  //   } catch (e) {
-  //     print('Error getting filtered bills: $e');
-  //     // Return empty list on error
-  //     return [];
-  //   }
-  // }
 
 
-
-  // Fetch data from server and store locally
-
-  // Get all orders (for statistics)
-  Future<List<DeliveryBillModel>> getAllDeliveryBills() async {
-    return await localDataSource.getBills();
-  }
 
   // Get filtered orders using SQL
+  @override
   Future<List<DeliveryBillModel>> getFilteredDeliveryBills({
     String? statusFilter,
     String? dateFilter,
@@ -213,6 +171,8 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
           break;
       }
     }
+
+    print('Fetching filtered bills with status: $statusFilter, date: $formattedDateFilter, search: $searchQuery');
 
     return await localDataSource.getFilteredBills(
       statusFilter: statusFilter,

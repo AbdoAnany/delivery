@@ -76,7 +76,7 @@ class _OrdersViewState extends State<OrdersView> {
                 Global.user?.name??'No Name',
                 maxLines: 2,
                 style: TextStyle(
-                  // height: .5,
+                   height: .9,
                   fontSize: 25.sp,
                   overflow: TextOverflow.ellipsis,
                   color: AppColors.white,
@@ -273,157 +273,111 @@ alignment: Alignment.centerRight,
   }
 
   Widget _buildFilterSection(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
-      ),
-      child: Column(
-        children: [
-          // Compact search with filters in a single row
-          Row(
-            children: [
-              // Search field (takes 40% of width)
-              Expanded(
-                flex: 4,
-                child: Container(
-                  height: 44.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(22),
-                    border: Border.all(color: _searchController.text.isNotEmpty ? AppColors.primary : Colors.grey.shade300),
-                  ),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'search_orders'.tr(),
-                      hintStyle: TextStyle(fontSize: 13.sp, color: Colors.grey.shade400),
-                      prefixIcon: Icon(Icons.search, size: 18, color: Colors.grey.shade500),
-                      suffixIcon: _searchController.text.isNotEmpty 
-                          ? IconButton(
-                              icon: const Icon(Icons.clear, size: 18),
-                              padding: EdgeInsets.zero,
-                              onPressed: () {
-                                _searchController.clear();
-                                context.read<OrdersCubit>().resetFilters();
-                              },
-                            )
-                          : null,
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
-                    ),
-                    onChanged: (value) {
-                      setState(() {});
-                      context.read<OrdersCubit>().setSearchQuery(value);
-                    },
-                  ),
+    return      Row(
+      children: [
+        SizedBox(width: 8.w),
+
+        Expanded(
+          flex: 4,
+          child: Container(
+            height: 44.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(color: _selectedStatusFilter != null ? AppColors.primary : Colors.grey.shade300),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _selectedStatusFilter,
+                icon: Icon(Icons.arrow_drop_down, color: Colors.grey.shade600),
+                isExpanded: true,
+                hint: Padding(
+                  padding: EdgeInsetsDirectional.only(start: 13.w),
+                  child: Text('Status'.tr(), style: TextStyle(fontSize: 13.sp, color: Colors.grey.shade600)),
                 ),
-              ),
-              SizedBox(width: 8.w),
-              
-              // Status dropdown (takes 30% of width)
-              Expanded(
-                flex: 3,
-                child: Container(
-                  height: 44.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(22),
-                    border: Border.all(color: _selectedStatusFilter != null ? AppColors.primary : Colors.grey.shade300),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: _selectedStatusFilter,
-                      icon: Icon(Icons.arrow_drop_down, color: Colors.grey.shade600),
-                      isExpanded: true,
-                      hint: Padding(
-                        padding: EdgeInsets.only(left: 8.w),
-                        child: Text('status'.tr(), style: TextStyle(fontSize: 8.sp, color: Colors.grey.shade600)),
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 8.w),
-                      borderRadius: BorderRadius.circular(15),
-                      items: [
-                        DropdownMenuItem(value: '', child: Text('all'.tr(), style: TextStyle(fontSize: 13.sp))),
-                        DropdownMenuItem(value: '0', child: Text('New'.tr(), style: TextStyle(fontSize: 13.sp))),
-                        DropdownMenuItem(value: '1', child: Text('delivered'.tr(), style: TextStyle(fontSize: 13.sp))),
-                        DropdownMenuItem(value: '2', child: Text('delivering'.tr(), style: TextStyle(fontSize: 13.sp))),
-                        DropdownMenuItem(value: '3', child: Text('returned'.tr(), style: TextStyle(fontSize: 13.sp))),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedStatusFilter = value;
-                        });
-                        context.read<OrdersCubit>().setStatusFilter(value);
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: 8.w),
-              
-              // Date dropdown (takes 30% of width)
-              Expanded(
-                flex: 3,
-                child: Container(
-                  height: 44.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(22),
-                    border: Border.all(color: _selectedDateFilter != null ? AppColors.primary : Colors.grey.shade300),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: _selectedDateFilter,
-                      icon: Icon(Icons.arrow_drop_down, color: Colors.grey.shade600),
-                      isExpanded: true,
-                      hint: Padding(
-                        padding: EdgeInsets.only(left: 10.w),
-                        child: Text('date'.tr(), style: TextStyle(fontSize: 13.sp, color: Colors.grey.shade600)),
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
-                      borderRadius: BorderRadius.circular(15),
-                      items: [
-                        DropdownMenuItem(value: '', child: Text('all'.tr(), style: TextStyle(fontSize: 13.sp))),
-                        DropdownMenuItem(value: 'today', child: Text('today'.tr(), style: TextStyle(fontSize: 13.sp))),
-                        DropdownMenuItem(value: 'this_week', child: Text('this_week'.tr(), style: TextStyle(fontSize: 13.sp))),
-                        DropdownMenuItem(value: 'this_month', child: Text('this_month'.tr(), style: TextStyle(fontSize: 13.sp))),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedDateFilter = value;
-                        });
-                        context.read<OrdersCubit>().setDateFilter(value);
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          
-          // Optional: Clear filters button that appears when any filter is applied
-          if (_selectedStatusFilter != null || _selectedDateFilter != null || _searchController.text.isNotEmpty)
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton.icon(
-                onPressed: () {
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                borderRadius: BorderRadius.circular(15),
+                items: [
+                  DropdownMenuItem(value: '', child: Center(child: Text('all'.tr(), textAlign: TextAlign.center,style: TextStyle(fontSize: 13.sp,)))),
+                  DropdownMenuItem(value: '0', child: Center(child: Text('New'.tr(), style: TextStyle(fontSize: 13.sp)))),
+                  DropdownMenuItem(value: '1', child: Center(child: Text('delivered'.tr(), style: TextStyle(fontSize: 13.sp)))),
+                  DropdownMenuItem(value: '2', child: Center(child: Text('delivering'.tr(), style: TextStyle(fontSize: 13.sp)))),
+                  DropdownMenuItem(value: '3', child: Center(child: Text('returned'.tr(), style: TextStyle(fontSize: 13.sp)))),
+                ],
+                onChanged: (value) {
                   setState(() {
-                    _selectedStatusFilter = null;
-                    _selectedDateFilter = null;
-                    _searchController.clear();
+                    _selectedStatusFilter = value;
                   });
-                  context.read<OrdersCubit>().resetFilters();
+                  context.read<OrdersCubit>().setStatusFilter(value);
                 },
-                icon: const Icon(Icons.refresh, size: 16),
-                label: Text('clear_all'.tr(), style: TextStyle(fontSize: 12.sp)),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.redAccent,
-                  visualDensity: VisualDensity.compact,
-                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0),
-                  minimumSize: Size.zero,
-                ),
               ),
             ),
-        ],
-      ),
+          ),
+        ),
+        SizedBox(width: 8.w),
+
+        // Date dropdown (takes 30% of width)
+        Expanded(
+          flex: 3,
+          child: Container(
+            height: 44.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(color: _selectedDateFilter != null ? AppColors.primary : Colors.grey.shade300),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _selectedDateFilter,
+                icon: Icon(Icons.arrow_drop_down, color: Colors.grey.shade600),
+                isExpanded: true,
+                hint: Padding(
+                  padding: EdgeInsetsDirectional.only(start: 13.w),
+                  child: Text('Date'.tr(), style: TextStyle(fontSize: 13.sp, color: Colors.grey.shade600)),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                borderRadius: BorderRadius.circular(15),
+                items: [
+                  DropdownMenuItem(value: '', child: Text('all'.tr(), style: TextStyle(fontSize: 13.sp))),
+                  DropdownMenuItem(value: 'today', child: Text('today'.tr(), style: TextStyle(fontSize: 13.sp))),
+                  DropdownMenuItem(value: 'this_week', child: Text('this_week'.tr(), style: TextStyle(fontSize: 13.sp))),
+                  DropdownMenuItem(value: 'this_month', child: Text('this_month'.tr(), style: TextStyle(fontSize: 13.sp))),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDateFilter = value;
+                  });
+                  context.read<OrdersCubit>().setDateFilter(value);
+                },
+              ),
+            ),
+          ),
+        ),
+        SizedBox(width: 8.w),
+        if (_selectedStatusFilter != null || _selectedDateFilter != null || _searchController.text.isNotEmpty)
+        ...[
+          Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              onPressed: () {
+                setState(() {
+                  _selectedStatusFilter = null;
+                  _selectedDateFilter = null;
+                  _searchController.clear();
+                });
+                context.read<OrdersCubit>().resetFilters();
+              },
+              icon: const Icon(Icons.refresh, size: 16),
+              // label: Text('clear_all'.tr(), style: TextStyle(fontSize: 12.sp)),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.redAccent,
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0),
+                minimumSize: Size.zero,
+              ),
+            ),
+          ),
+          SizedBox(width: 8.w),
+        ]
+      ],
     );
   }
 

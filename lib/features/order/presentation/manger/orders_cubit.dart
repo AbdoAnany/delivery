@@ -39,7 +39,7 @@ class OrdersCubit extends Cubit<OrdersState> {
     }
   }
 
-  Future<void> getDeliveryBills({bool isRefresh = false}) async {
+  Future<void> getDeliveryBills({bool isRefresh = false, String? processedFlag, bool? sortAscending=true}) async {
     if (isRefresh) {
       _isRefreshing = true;
     } else {
@@ -50,10 +50,14 @@ class OrdersCubit extends Cubit<OrdersState> {
       _allOrders = await deliveryRepository.getDeliveryBills(
         Global.user!.deliveryNo,
         Global.user!.languageNo,
+          processedFlag: processedFlag,
+
       );
+      print('_allOrders  ${_allOrders.length}');
 
       _applyFilters();
     } catch (e) {
+      print('Error fetching bills: $e');
       if (!isClosed) {
         emit(OrdersError('Failed to load orders: ${e.toString()}'));
       }
@@ -62,7 +66,7 @@ class OrdersCubit extends Cubit<OrdersState> {
     }
   }
 
-  void _applyFilters() {
+  Future<void> _applyFilters() async {
     if (_allOrders.isEmpty) {
       emit(OrdersLoaded(_allOrders, []));
       return;
@@ -71,17 +75,20 @@ class OrdersCubit extends Cubit<OrdersState> {
     // Start with all orders
     _filteredOrders = List.from(_allOrders);
 
+
+    // Apply status filter if set
+    if (_statusFilter != null) {
+      _filteredOrders =await deliveryRepository.getDeliveryBills(   Global.user!.deliveryNo,
+        Global.user!.languageNo,
+        processedFlag: _statusFilter!.isEmpty ? null : _statusFilter,);
+          // _filteredOrders
+          // .where((order) => order.statusFlag == _statusFilter)
+          // .toList();
+    }
     // Apply tab filter first
     _filteredOrders = tabController.index == 0
         ? _filteredOrders.where((order) => order.statusFlag == '0').toList()
         : _filteredOrders.where((order) => order.statusFlag != '0').toList();
-
-    // Apply status filter if set
-    if (_statusFilter != null) {
-      _filteredOrders = _filteredOrders
-          .where((order) => order.statusFlag == _statusFilter)
-          .toList();
-    }
 
     // Apply date filter if set
     if (_dateFilter != null) {
@@ -213,6 +220,8 @@ class OrdersCubit extends Cubit<OrdersState> {
     await deliveryRepository.clearDeliveryData();
     emit(OrdersInitial());
   }
+
+
 }
 
 class _DefaultTickerProvider implements TickerProvider {
