@@ -60,7 +60,7 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
         bool sortAscending=true,
       }) async {
     print('Fetching bills');
-    final bills = await localDataSource.getBillsNew(statusFilter: processedFlag,sortAscending: sortAscending).catchError((e) => print('Error fetching bills from local: $e'));
+    final bills = await localDataSource.getBills(statusFilter: processedFlag,sortAscending: sortAscending);
     if (bills.isNotEmpty) {
       print('Using  cached bills ${bills.length}');
       return bills;
@@ -131,9 +131,10 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
       print('Updated bill status in returnReason: $returnReason');
 
       final success = await localDataSource.updateBillStatus(   billSrl: billSrl, newStatus: statusFlag,);
+      print('Updated bill status in local: ${success}');
+
       final dare = await localDataSource.getBillsByBillSrl( billSrl: billSrl,);
       print('Updated bill status in dare: ${dare.t}');
-      print('Updated bill status in local: $success');
     }catch (e) {
       print('Error updating bill status in local: $e');
     }
@@ -149,7 +150,7 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
         );
 
       } catch (e) {
-        throw Exception('Failed to update bill status: ${e.toString()}');
+        throw Exception('Failed to remote update bill status: ${e.toString()}');
       }
     } else {
       throw Exception('No internet connection. Cannot update bill status');

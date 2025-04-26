@@ -55,7 +55,7 @@ class OrdersCubit extends Cubit<OrdersState> {
       );
       print('_allOrders  ${_allOrders.length}');
 
-      _applyFilters();
+   await   _applyFilters();
     } catch (e) {
       print('Error fetching bills: $e');
       if (!isClosed) {

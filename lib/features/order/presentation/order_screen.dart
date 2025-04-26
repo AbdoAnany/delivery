@@ -73,10 +73,10 @@ class _OrdersViewState extends State<OrdersView> {
               width: MediaQuery.of(context).size.width*.5,
               padding: EdgeInsets.only(left: 16.0.w, top: 46.h),
               child:      Text(
-               'No Name',
+                Global.user?.name??'No Name',
                 maxLines: 2,
                 style: TextStyle(
-                   height: .5,
+                   height: 1,
                   fontSize: 25.sp,
                   overflow: TextOverflow.ellipsis,
                   color: AppColors.white,
@@ -156,8 +156,8 @@ alignment: Alignment.centerRight,
         ),
         Positioned(
           left: -70.w,
-          top: MediaQuery.of(context).padding.top /1.8,
-          bottom: -2,
+          top: MediaQuery.of(context).padding.top /2,
+          bottom: 0,
           child: Image.asset(
             AppImages.man,
             fit: BoxFit.contain,
@@ -249,17 +249,21 @@ alignment: Alignment.centerRight,
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: orders.length,
-                itemBuilder: (context, index) {
+                itemBuilder: (context1, index) {
                   return OrderItem(
                     order: orders[index],
-                    onTap: (bill) {
+                    onTap: (bill) async {
                       // Handle order item tap
-                      Navigator.push(
+                final done =  await   Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => BillDetailScreen(bill: bill, ),
                         ),
                       );
+                print('done $done');
+                      if (done != null) {
+                      await  context.read<OrdersCubit>().getDeliveryBills();
+                      }
                     },
                   );
                 },

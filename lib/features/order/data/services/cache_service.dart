@@ -143,41 +143,41 @@ try{
       'DLVRY_STATUS_FLG': bill['DLVRY_STATUS_FLG'] ?? '0',
     };
   }
-  Future<List<DeliveryBillModel>> getBills( {String? statusFilter}) async {
-    final db = await database;
-
-    String where = '';
-    List<dynamic> args = [];
-
-    if (statusFilter != null) {
-      if (statusFilter == 'new') {
-        where += ' AND DLVRY_STATUS_FLG = ?';
-        args.add('0');
-      } else if (statusFilter == 'others') {
-        where += ' AND DLVRY_STATUS_FLG != ?';
-        args.add('0');
-      } else {
-        where += ' AND DLVRY_STATUS_FLG = ?';
-        args.add(statusFilter);
-      }
-    }
-
-    // final results1 = await db.query(
-    //   'delivery_bills',
-    //   where: where.isNotEmpty ? where.substring(5) : null,
-    //   whereArgs: args.isNotEmpty ? args : null,
-    //   orderBy: 'BILL_DATE DESC, BILL_TIME DESC',
-    // );
-    final results = await db.query(
-      'delivery_bills',
-      // where: where.isNotEmpty ? where.substring(5) : null,
-      // whereArgs: args.isNotEmpty ? args : null,
-      // orderBy: 'BILL_DATE DESC, BILL_TIME DESC',
-    );
-
-    return results.map((json) => DeliveryBillModel.fromDb(json)).toList();
-  }
-  Future<List<DeliveryBillModel>> getBillsNew({
+  // Future<List<DeliveryBillModel>> getBills( {String? statusFilter}) async {
+  //   final db = await database;
+  //
+  //   String where = '';
+  //   List<dynamic> args = [];
+  //
+  //   if (statusFilter != null) {
+  //     if (statusFilter == 'new') {
+  //       where += ' AND DLVRY_STATUS_FLG = ?';
+  //       args.add('0');
+  //     } else if (statusFilter == 'others') {
+  //       where += ' AND DLVRY_STATUS_FLG != ?';
+  //       args.add('0');
+  //     } else {
+  //       where += ' AND DLVRY_STATUS_FLG = ?';
+  //       args.add(statusFilter);
+  //     }
+  //   }
+  //
+  //   // final results1 = await db.query(
+  //   //   'delivery_bills',
+  //   //   where: where.isNotEmpty ? where.substring(5) : null,
+  //   //   whereArgs: args.isNotEmpty ? args : null,
+  //   //   orderBy: 'BILL_DATE DESC, BILL_TIME DESC',
+  //   // );
+  //   final results = await db.query(
+  //     'delivery_bills',
+  //     // where: where.isNotEmpty ? where.substring(5) : null,
+  //     // whereArgs: args.isNotEmpty ? args : null,
+  //     // orderBy: 'BILL_DATE DESC, BILL_TIME DESC',
+  //   );
+  //
+  //   return results.map((json) => DeliveryBillModel.fromDb(json)).toList();
+  // }
+  Future<List<DeliveryBillModel>> getBills({
     String? statusFilter,
     String? sortBy,
     bool sortAscending = false,
@@ -293,17 +293,23 @@ print('Filtered @@@@ss bills: $results');
   }) async {
     final db = await database;
 
-    return await db.update(
-      'delivery_bills',
-      {
-        'DLVRY_STATUS_FLG': newStatus,
+    try {
+      return await db.update(
+            'delivery_bills',
+            {
+              'DLVRY_STATUS_FLG': newStatus,
+              // 'RETURN_REASON': returnReason ?? '',
+              'SYNC_STATUS': 1, // Mark as needing sync
+              'LAST_UPDATED': DateTime.now().toIso8601String(),
+            },
+            where: 'BILL_SRL = ?',
+            whereArgs: [billSrl],
+          );
+    } catch (e) {
+      print('ddddddddddd     '+e.toString());
+      return 0; // Return 0 if update fails
 
-        'SYNC_STATUS': 1, // Mark as needing sync
-        'LAST_UPDATED': DateTime.now().toIso8601String(),
-      },
-      where: 'BILL_SRL = ?',
-      whereArgs: [billSrl],
-    );
+    }
   }
 
   // ========== STATUS TYPE OPERATIONS ========== //

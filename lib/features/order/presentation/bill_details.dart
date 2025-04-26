@@ -109,6 +109,7 @@ class _BillDetailScreenState extends State<BillDetailScreenOverview> {
         // _selectedStatusType!,
         // _selectedReason ?? '',
         // LanguageUtil.getCurrentLanguage(),
+        returnReason: _selectedReason ?? '',
         billSrl:  widget.bill.billSrl, statusFlag: _selectedStatusType??'1',
       );
 
