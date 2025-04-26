@@ -87,7 +87,7 @@ class OrderItem extends StatelessWidget {
           const SizedBox(height: 4),
           FittedBox(
             child: Text(
-              _mapStatusFlag(order.statusFlag).trim(),
+              _mapStatusFlag(order.statusFlag).tr(),
 
               style: TextStyle(
                 fontWeight: FontWeight.w700,

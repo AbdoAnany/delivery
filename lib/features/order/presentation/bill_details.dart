@@ -109,7 +109,7 @@ class _BillDetailScreenState extends State<BillDetailScreenOverview> {
         // _selectedStatusType!,
         // _selectedReason ?? '',
         // LanguageUtil.getCurrentLanguage(),
-        billSrl:  widget.bill.billSrl, statusFlag:  widget.bill.statusFlag,
+        billSrl:  widget.bill.billSrl, statusFlag: _selectedStatusType??'1',
       );
 
       if (success) {
@@ -119,6 +119,8 @@ AppToast.success(context: context, message: 'Status updated successfully');
           Navigator.of(context).pop(true); // Return true to indicate success
         }
       } else {
+        AppToast.error(context: context, message: 'Failed to update status');
+
         throw Exception('Failed to update status');
       }
     } catch (e) {

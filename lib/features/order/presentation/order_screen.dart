@@ -73,10 +73,10 @@ class _OrdersViewState extends State<OrdersView> {
               width: MediaQuery.of(context).size.width*.5,
               padding: EdgeInsets.only(left: 16.0.w, top: 46.h),
               child:      Text(
-                Global.user?.name??'No Name',
+               'No Name',
                 maxLines: 2,
                 style: TextStyle(
-                   height: .9,
+                   height: .5,
                   fontSize: 25.sp,
                   overflow: TextOverflow.ellipsis,
                   color: AppColors.white,
@@ -156,8 +156,8 @@ alignment: Alignment.centerRight,
         ),
         Positioned(
           left: -70.w,
-          top: MediaQuery.of(context).padding.top /2,
-          bottom: 0,
+          top: MediaQuery.of(context).padding.top /1.8,
+          bottom: -2,
           child: Image.asset(
             AppImages.man,
             fit: BoxFit.contain,

@@ -37,7 +37,6 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> _loadSavedCredentials() async {
     _deliveryNo = _sharedPreferences.getString('deliveryNo');
     _languageNo = _sharedPreferences.getString('languageNo') ?? '2';
-print('_languageNo: $_languageNo');
     if (_deliveryNo != null) {
       emit(AuthAuthenticated(_deliveryNo!));
       _sessionManager.start();

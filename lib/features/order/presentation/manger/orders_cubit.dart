@@ -47,13 +47,13 @@ class OrdersCubit extends Cubit<OrdersState> {
     }
 
     try {
-      _allOrders = await deliveryRepository.getDeliveryBills(
-        Global.user!.deliveryNo,
-        Global.user!.languageNo,
-          processedFlag: processedFlag,
-
-      );
-      print('_allOrders  ${_allOrders.length}');
+      // _allOrders = await deliveryRepository.getDeliveryBills(
+      //   Global.user!.deliveryNo,
+      //   Global.user!.languageNo,
+      //     processedFlag: processedFlag,
+      //
+      // );
+      // print('_allOrders  ${_allOrders.length}');
 
       _applyFilters();
     } catch (e) {

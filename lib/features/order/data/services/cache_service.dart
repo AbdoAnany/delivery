@@ -297,6 +297,7 @@ print('Filtered @@@@ss bills: $results');
       'delivery_bills',
       {
         'DLVRY_STATUS_FLG': newStatus,
+
         'SYNC_STATUS': 1, // Mark as needing sync
         'LAST_UPDATED': DateTime.now().toIso8601String(),
       },
@@ -394,4 +395,21 @@ print('Filtered @@@@ss bills: $results');
     final db = await instance.database;
     db.close();
   }
+
+ Future<dynamic> getBillsByBillSrl({required String billSrl}) {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> maps = await database.query(
+        'delivery_bills',
+        where: 'BILL_SRL = ?',
+        whereArgs: [billSrl],
+      );
+      print('maps @@@@ : $maps');
+      if (maps.isNotEmpty) {
+        return maps;
+      } else {
+        return null; // No bill found with the given BILL_SRL
+      }
+    });
+ }
 }

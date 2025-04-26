@@ -125,13 +125,20 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
       String returnReason,
       String langNo,
       ) async {
+    try {
+      print('Updated bill status in statusFlag: $statusFlag');
+      print('Updated bill status in billSrl: $billSrl');
+      print('Updated bill status in returnReason: $returnReason');
+
+      final success = await localDataSource.updateBillStatus(   billSrl: billSrl, newStatus: statusFlag,);
+      final dare = await localDataSource.getBillsByBillSrl( billSrl: billSrl,);
+      print('Updated bill status in dare: ${dare.t}');
+      print('Updated bill status in local: $success');
+    }catch (e) {
+      print('Error updating bill status in local: $e');
+    }
     if (await _isConnected()) {
-      try {
-        final success = await localDataSource.updateBillStatus(   billSrl: billSrl, newStatus: statusFlag,returnReason: returnReason);
-        print('Updated bill status in local: $success');
-      }catch (e) {
-        print('Error updating bill status in local: $e');
-      }
+
       try {
 
         return await remoteDataSource.updateBillStatus(
